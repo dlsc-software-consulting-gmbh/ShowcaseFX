@@ -89,7 +89,7 @@ public class ShowcasePane extends BorderPane {
         System.getProperties().put("javafx.pseudoClassOverrideEnabled", "true");
     }
 
-    private final App app;
+    private final ShowcaseApp app;
 
     private BorderPane root;
     private SamplePageNavigation samplePageNavigation;
@@ -116,7 +116,7 @@ public class ShowcasePane extends BorderPane {
     private final StylesheetEntry modenaStylesheet = new StylesheetEntry("Modena", SKIN_BASE + "modena/modena.css");
     private final StylesheetEntry caspianStylesheet = new StylesheetEntry("Caspian", SKIN_BASE + "caspian/caspian.css");
 
-    public ShowcasePane(App app, Stage stage) {
+    public ShowcasePane(ShowcaseApp app, Stage stage) {
         this.app = app;
         mainStage = stage;
 
