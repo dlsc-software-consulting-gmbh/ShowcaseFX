@@ -25,7 +25,18 @@ public class CssShowcaseView extends Control {
             }
         });
 
-        getConfigurations().add(new CssConfiguration("Modena only"));
+        selectedConfigurationProperty().addListener((it, oldValue, newValue) -> {
+            if (oldValue != null) {
+                oldValue.getStylesheetUrls().forEach(url -> getStylesheets().remove(url));
+            }
+            if (newValue != null) {
+                newValue.getStylesheetUrls().forEach(url -> getStylesheets().add(url));
+            }
+        });
+
+        CssConfiguration modenaOnly = new CssConfiguration("Modena only");
+        getConfigurations().add(modenaOnly);
+        setSelectedConfiguration(modenaOnly);
     }
 
     @Override

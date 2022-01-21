@@ -152,15 +152,6 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
             });
 
             stylesheetsBox.itemsProperty().bind(getSkinnable().configurationsProperty());
-            stylesheetsBox.valueProperty().addListener((it, oldValue, newValue) -> {
-                if (oldValue != null) {
-                    oldValue.getStylesheetUrls().forEach(url -> getSkinnable().getStylesheets().remove(url));
-                }
-                if (newValue != null) {
-                    newValue.getStylesheetUrls().forEach(url -> getSkinnable().getStylesheets().add(url));
-                }
-            });
-
             stylesheetsBox.valueProperty().bindBidirectional(getSkinnable().selectedConfigurationProperty());
 
             rtlButton = new ToggleButton("RTL");
