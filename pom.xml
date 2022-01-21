@@ -24,7 +24,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
         <local.repository.path>/tmp/repository</local.repository.path>
-        <java.version>16</java.version>
+        <java.version>11</java.version>
         <javafx.version>17.0.2</javafx.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.8.1</junit.version>
