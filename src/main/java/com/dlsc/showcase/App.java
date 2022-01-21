@@ -39,14 +39,14 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
-        MainPane modena = new MainPane(this, stage);
+        ShowcasePane modena = new ShowcasePane(this, stage);
 
         if (getParameters().getRaw().contains("test")) {
             modena.setTest(true);
         }
 
         Scene scene = new Scene(modena, 1024, 768);
-        scene.getStylesheets().add(MainPane.testAppCssUrl);
+        scene.getStylesheets().add(ShowcasePane.testAppCssUrl);
 
         stage.setScene(scene);
         stage.setTitle("ShowcaseFX");

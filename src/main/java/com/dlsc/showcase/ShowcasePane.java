@@ -79,11 +79,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MainPane extends BorderPane {
+public class ShowcasePane extends BorderPane {
 
     public static final String SKIN_BASE = "com/sun/javafx/scene/control/skin/";
 
-    static final String testAppCssUrl = MainPane.class.getResource("TestApp.css").toExternalForm();
+    static final String testAppCssUrl = ShowcasePane.class.getResource("TestApp.css").toExternalForm();
 
     static {
         System.getProperties().put("javafx.pseudoClassOverrideEnabled", "true");
@@ -116,7 +116,7 @@ public class MainPane extends BorderPane {
     private final StylesheetEntry modenaStylesheet = new StylesheetEntry("Modena", SKIN_BASE + "modena/modena.css");
     private final StylesheetEntry caspianStylesheet = new StylesheetEntry("Caspian", SKIN_BASE + "caspian/caspian.css");
 
-    public MainPane(App app, Stage stage) {
+    public ShowcasePane(App app, Stage stage) {
         this.app = app;
         mainStage = stage;
 
@@ -216,9 +216,9 @@ public class MainPane extends BorderPane {
                 samplePageNavigation.getCurrentSection());
     });
 
-    private static MainPane instance;
+    private static ShowcasePane instance;
 
-    public static MainPane getInstance() {
+    public static ShowcasePane getInstance() {
         return instance;
     }
 
@@ -354,23 +354,23 @@ public class MainPane extends BorderPane {
             Tab tab1 = new Tab("All Controls");
             tab1.setContent(samplePageNavigation);
             Tab tab2 = new Tab("UI Mosaic");
-            tab2.setContent(new ScrollPane(mosaic = FXMLLoader.load(MainPane.class.getResource("ui-mosaic.fxml"))));
+            tab2.setContent(new ScrollPane(mosaic = FXMLLoader.load(ShowcasePane.class.getResource("ui-mosaic.fxml"))));
 
             Tab tab3 = new Tab("Alignment Test");
             tab3.setContent(new ScrollPane(heightTest =
-                    FXMLLoader.load(MainPane.class.getResource("SameHeightTest.fxml"))));
+                    FXMLLoader.load(ShowcasePane.class.getResource("SameHeightTest.fxml"))));
 
             Tab tab4 = new Tab("Simple Windows");
             tab4.setContent(new ScrollPane(simpleWindows = new SimpleWindowPage()));
 
             Tab tab5 = new Tab("Combinations");
             tab5.setContent(new ScrollPane(combinationsTest =
-                    FXMLLoader.load(MainPane.class.getResource("CombinationTest.fxml"))));
+                    FXMLLoader.load(ShowcasePane.class.getResource("CombinationTest.fxml"))));
 
             // Customer example from bug report http://javafx-jira.kenai.com/browse/DTL-5561
             Tab tab6 = new Tab("Customer Example");
             tab6.setContent(new ScrollPane(customerTest =
-                    FXMLLoader.load(MainPane.class.getResource("ScottSelvia.fxml"))));
+                    FXMLLoader.load(ShowcasePane.class.getResource("ScottSelvia.fxml"))));
 
             contentTabs.getTabs().addAll(tab1, tab2, tab3, tab4, tab5, tab6);
             contentTabs.getSelectionModel().select(selectedTab);
@@ -483,7 +483,7 @@ public class MainPane extends BorderPane {
                 samplePageNavigation.setCurrentSection(scrolledSection);
             });
         } catch (IOException ex) {
-            Logger.getLogger(MainPane.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ShowcasePane.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -613,7 +613,7 @@ public class MainPane extends BorderPane {
                 ImageIO.write(imgBuffer, "PNG", file);
                 System.out.println("Written image: " + file.getAbsolutePath());
             } catch (IOException ex) {
-                Logger.getLogger(MainPane.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ShowcasePane.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     };

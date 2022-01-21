@@ -18,6 +18,11 @@
     <properties>
         <project.identifier>showcasefx</project.identifier>
         <project.github.repository>dlsc-software-consulting-gmbh/ShowcaseFX</project.github.repository>
+
+        <sonar.projectKey>dlsc-software-consulting-gmbh_ShowcaseFX</sonar.projectKey>
+        <sonar.organization>dlsc-software-consulting-gmbh</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
         <local.repository.path>/tmp/repository</local.repository.path>
         <java.version>16</java.version>
         <javafx.version>17.0.2</javafx.version>
