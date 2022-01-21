@@ -23,4 +23,6 @@ view.setSelectedConfiguration(config);
 // then add pane to your UI
 ```
 
+### Screenshot
+
 ![Screenshot](docs/showcasefx.png)
