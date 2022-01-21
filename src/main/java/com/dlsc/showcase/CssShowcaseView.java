@@ -14,6 +14,12 @@ import javafx.scene.control.Skin;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A control that showcases all JavaFX controls individually and in combination with
+ * each other. Different stylesheet configurations can be assigned to the view so that
+ * developers can immediately see the impact of any changes they make to their styling
+ * code.
+ */
 public class CssShowcaseView extends Control {
 
     public CssShowcaseView() {
