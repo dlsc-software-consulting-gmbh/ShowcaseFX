@@ -40,35 +40,24 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.NodeOrientation;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.*;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
@@ -89,8 +78,6 @@ public class ShowcasePane extends BorderPane {
         System.getProperties().put("javafx.pseudoClassOverrideEnabled", "true");
     }
 
-    private final ShowcaseApp app;
-
     private BorderPane root;
     private SamplePageNavigation samplePageNavigation;
     private SamplePage samplePage;
@@ -99,7 +86,6 @@ public class ShowcasePane extends BorderPane {
     private SimpleWindowPage simpleWindows;
     private Node combinationsTest;
     private Node customerTest;
-    private Stage mainStage;
     private Color backgroundColor;
     private Color baseColor;
     private Color accentColor;
@@ -108,18 +94,14 @@ public class ShowcasePane extends BorderPane {
     private String styleSheetContent = "";
 
     private ComboBox<StylesheetEntry> stylesheetsBox;
-    private ToggleButton retinaButton, rtlButton, embeddedPerformanceButton;
+    private ToggleButton retinaButton, rtlButton;
     private TabPane contentTabs;
     private boolean test;
-    private boolean embeddedPerformanceMode;
 
     private final StylesheetEntry modenaStylesheet = new StylesheetEntry("Modena", SKIN_BASE + "modena/modena.css");
     private final StylesheetEntry caspianStylesheet = new StylesheetEntry("Caspian", SKIN_BASE + "caspian/caspian.css");
 
-    public ShowcasePane(ShowcaseApp app, Stage stage) {
-        this.app = app;
-        mainStage = stage;
-
+    public ShowcasePane() {
         // build Menu Bar
         setTop(buildMenuBar());
         setCenter(root);
@@ -235,21 +217,6 @@ public class ShowcasePane extends BorderPane {
         contentTabs.requestLayout();
     }
 
-    public void restart() {
-        mainStage.close();
-        root = null;
-        accentColor = null;
-        baseColor = null;
-        backgroundColor = null;
-        fontName = null;
-        fontSize = 13;
-        try {
-            app.start(new Stage());
-        } catch (Exception ex) {
-            throw new RuntimeException("Failed to start another Modena window", ex);
-        }
-    }
-
     private MenuBar buildMenuBar() {
         MenuBar menuBar = new MenuBar();
         menuBar.setUseSystemMenuBar(true);
@@ -301,9 +268,7 @@ public class ShowcasePane extends BorderPane {
             Platform.runLater(() -> samplePageNavigation.setCurrentSection(scrolledSection));
             return;
         }
-        if (modena && embeddedPerformanceMode) {
-            getScene().setUserAgentStylesheet(SKIN_BASE + "modena/modena-embedded-performance.css");
-        }
+
         styleSheetContent += "\n.root {\n";
         System.out.println("baseColor = " + baseColor);
         System.out.println("accentColor = " + accentColor);
@@ -357,24 +322,22 @@ public class ShowcasePane extends BorderPane {
             tab2.setContent(new ScrollPane(mosaic = FXMLLoader.load(ShowcasePane.class.getResource("ui-mosaic.fxml"))));
 
             Tab tab3 = new Tab("Alignment Test");
-            tab3.setContent(new ScrollPane(heightTest =
-                    FXMLLoader.load(ShowcasePane.class.getResource("SameHeightTest.fxml"))));
+            tab3.setContent(new ScrollPane(heightTest = FXMLLoader.load(ShowcasePane.class.getResource("SameHeightTest.fxml"))));
 
             Tab tab4 = new Tab("Simple Windows");
             tab4.setContent(new ScrollPane(simpleWindows = new SimpleWindowPage()));
 
             Tab tab5 = new Tab("Combinations");
-            tab5.setContent(new ScrollPane(combinationsTest =
-                    FXMLLoader.load(ShowcasePane.class.getResource("CombinationTest.fxml"))));
+            tab5.setContent(new ScrollPane(combinationsTest = FXMLLoader.load(ShowcasePane.class.getResource("CombinationTest.fxml"))));
 
             // Customer example from bug report http://javafx-jira.kenai.com/browse/DTL-5561
             Tab tab6 = new Tab("Customer Example");
-            tab6.setContent(new ScrollPane(customerTest =
-                    FXMLLoader.load(ShowcasePane.class.getResource("ScottSelvia.fxml"))));
+            tab6.setContent(new ScrollPane(customerTest = FXMLLoader.load(ShowcasePane.class.getResource("ScottSelvia.fxml"))));
 
             contentTabs.getTabs().addAll(tab1, tab2, tab3, tab4, tab5, tab6);
             contentTabs.getSelectionModel().select(selectedTab);
             samplePage.setMouseTransparent(test);
+
             // height test set selection for
             Platform.runLater(() -> {
                 for (Node n : heightTest.lookupAll(".choice-box")) {
@@ -384,6 +347,7 @@ public class ShowcasePane extends BorderPane {
                     ((ComboBox) n).getSelectionModel().selectFirst();
                 }
             });
+
             // Create Toolbar
             retinaButton = new ToggleButton("@2x");
             retinaButton.setSelected(retina);
@@ -421,35 +385,18 @@ public class ShowcasePane extends BorderPane {
 
 
             rtlButton = new ToggleButton("RTL");
-            rtlButton.setOnAction(event -> root.setNodeOrientation(rtlButton.isSelected() ?
-                    NodeOrientation.RIGHT_TO_LEFT : NodeOrientation.LEFT_TO_RIGHT));
-
-        /*  embeddedPerformanceButton = new ToggleButton("EP");
-            embeddedPerformanceButton.setSelected(embeddedPerformanceMode);
-            embeddedPerformanceButton.setTooltip(new Tooltip("Apply Embedded Performance extra stylesheet"));
-            embeddedPerformanceButton.setOnAction(event -> {
-                embeddedPerformanceMode = embeddedPerformanceButton.isSelected();
-                rebuild.handle(event);
-            }); */
-
-            Button saveButton = new Button("Save...");
-            saveButton.setOnAction(saveBtnHandler);
-
-            Button restartButton = new Button("Restart");
-            restartButton.setOnAction(event -> restart());
+            rtlButton.setOnAction(event -> root.setNodeOrientation(rtlButton.isSelected() ? NodeOrientation.RIGHT_TO_LEFT : NodeOrientation.LEFT_TO_RIGHT));
 
             ToolBar toolBar = new ToolBar(new Label("Stylesheet:"),
                     stylesheetsBox,
                     reloadButton,
                     rtlButton,
-                    /* embeddedPerformanceButton, new Separator(), */ retinaButton,
                     new Label("Base:"),
                     createBaseColorPicker(),
                     new Label("Background:"),
                     createBackgroundColorPicker(),
                     new Label("Accent:"),
-                    createAccentColorPicker(),
-                    new Separator(), saveButton, restartButton
+                    createAccentColorPicker()
             );
             toolBar.setId("TestAppToolbar");
             // Create content group used for scaleing @2x
@@ -471,6 +418,7 @@ public class ShowcasePane extends BorderPane {
             combinationsTest.getStyleClass().add("needs-background");
             customerTest.getStyleClass().add("needs-background");
             simpleWindows.setModena(true);
+
             // apply retina scale
             if (retina) {
                 contentTabs.getTransforms().setAll(new Scale(2, 2));
@@ -524,7 +472,7 @@ public class ShowcasePane extends BorderPane {
                 Color.BLACK
         );
         colorPicker.valueProperty().addListener((observable, oldValue, c) -> setBaseColor(c));
-        colorPicker.setDisable(true);
+        colorPicker.setDisable(false);
         return colorPicker;
     }
 
@@ -556,7 +504,7 @@ public class ShowcasePane extends BorderPane {
             backgroundColor = c;
             updateUserAgentStyleSheet();
         });
-        colorPicker.setDisable(true);
+        colorPicker.setDisable(false);
         return colorPicker;
     }
 
@@ -582,7 +530,7 @@ public class ShowcasePane extends BorderPane {
                 Color.BLACK
         );
         colorPicker.valueProperty().addListener((observable, oldValue, c) -> setAccentColor(c));
-        colorPicker.setDisable(true);
+        colorPicker.setDisable(false);
         return colorPicker;
     }
 
@@ -591,32 +539,32 @@ public class ShowcasePane extends BorderPane {
         updateUserAgentStyleSheet();
     }
 
-    private EventHandler<ActionEvent> saveBtnHandler = event -> {
-        FileChooser fc = new FileChooser();
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG", "*.png"));
-        File file = fc.showSaveDialog(mainStage);
-        if (file != null) {
-            try {
-                samplePage.getStyleClass().add("root");
-                int width = (int) (samplePage.getLayoutBounds().getWidth() + 0.5d);
-                int height = (int) (samplePage.getLayoutBounds().getHeight() + 0.5d);
-                BufferedImage imgBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2 = imgBuffer.createGraphics();
-                for (int y = 0; y < height; y += 2048) {
-                    SnapshotParameters snapshotParameters = new SnapshotParameters();
-                    int remainingHeight = Math.min(2048, height - y);
-                    snapshotParameters.setViewport(new Rectangle2D(0, y, width, remainingHeight));
-                    WritableImage img = samplePage.snapshot(snapshotParameters, null);
-                    g2.drawImage(SwingFXUtils.fromFXImage(img, null), 0, y, null);
-                }
-                g2.dispose();
-                ImageIO.write(imgBuffer, "PNG", file);
-                System.out.println("Written image: " + file.getAbsolutePath());
-            } catch (IOException ex) {
-                Logger.getLogger(ShowcasePane.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    };
+//    private EventHandler<ActionEvent> saveBtnHandler = event -> {
+//        FileChooser fc = new FileChooser();
+//        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG", "*.png"));
+//        File file = fc.showSaveDialog(getScene().getWindow());
+//        if (file != null) {
+//            try {
+//                samplePage.getStyleClass().add("root");
+//                int width = (int) (samplePage.getLayoutBounds().getWidth() + 0.5d);
+//                int height = (int) (samplePage.getLayoutBounds().getHeight() + 0.5d);
+//                BufferedImage imgBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+//                Graphics2D g2 = imgBuffer.createGraphics();
+//                for (int y = 0; y < height; y += 2048) {
+//                    SnapshotParameters snapshotParameters = new SnapshotParameters();
+//                    int remainingHeight = Math.min(2048, height - y);
+//                    snapshotParameters.setViewport(new Rectangle2D(0, y, width, remainingHeight));
+//                    WritableImage img = samplePage.snapshot(snapshotParameters, null);
+//                    g2.drawImage(SwingFXUtils.fromFXImage(img, null), 0, y, null);
+//                }
+//                g2.dispose();
+//                ImageIO.write(imgBuffer, "PNG", file);
+//                System.out.println("Written image: " + file.getAbsolutePath());
+//            } catch (IOException ex) {
+//                Logger.getLogger(ShowcasePane.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+//    };
 
 
     private static boolean alreadySet;
@@ -648,11 +596,11 @@ public class ShowcasePane extends BorderPane {
         }
 
         @Override
-        public void connect() throws IOException {
+        public void connect() {
         }
 
         @Override
-        public InputStream getInputStream() throws IOException {
+        public InputStream getInputStream() {
             return new ByteArrayInputStream(styleSheetContent.getBytes(StandardCharsets.UTF_8));
         }
     }
