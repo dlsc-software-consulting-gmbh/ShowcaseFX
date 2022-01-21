@@ -158,7 +158,7 @@ public class ShowcasePane extends BorderPane {
         return test;
     }
 
-    class StylesheetEntry {
+    public static class StylesheetEntry {
 
         private String name;
         private String url;
