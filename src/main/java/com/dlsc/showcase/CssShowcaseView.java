@@ -89,7 +89,7 @@ public class CssShowcaseView extends Control {
             return name;
         }
 
-        /**>
+        /**
          * Returns the list of stylesheet URLs added to this configuration
          *
          * @return the list of stylesheet URLs
