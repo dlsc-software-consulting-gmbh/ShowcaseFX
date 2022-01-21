@@ -630,6 +630,7 @@ public class MainPane extends BorderPane {
         }
     }
 
+
     private String colorToRGBA(Color color) {
         return String.format((Locale) null, "rgba(%d, %d, %d, %f)",
                 (int) Math.round(color.getRed() * 255),
