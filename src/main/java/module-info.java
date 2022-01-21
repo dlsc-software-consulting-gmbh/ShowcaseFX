@@ -1,4 +1,4 @@
-open module com.dlsc.showcase {
+open module com.dlsc.showcasefx {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.swing;
