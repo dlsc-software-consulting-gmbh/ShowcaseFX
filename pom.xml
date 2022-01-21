@@ -172,7 +172,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.dlsc.showcase.ShowcaseApp
+                            <mainClass>com.dlsc.showcase.demo.CssShowcaseViewTestApp
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

@@ -29,20 +29,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.dlsc.showcase;
+package com.dlsc.showcase.demo;
 
+import com.dlsc.showcase.CssShowcaseView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class ShowcaseApp extends Application {
+public class CssShowcaseViewTestApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        ShowcasePane modena = new ShowcasePane();
+        CssShowcaseView view = new CssShowcaseView();
 
-        Scene scene = new Scene(modena, 1024, 768);
-        scene.getStylesheets().add(ShowcasePane.testAppCssUrl);
+        Scene scene = new Scene(view, 1024, 768);
 
         stage.setScene(scene);
         stage.setTitle("ShowcaseFX");

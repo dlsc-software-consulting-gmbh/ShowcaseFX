@@ -29,7 +29,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.dlsc.showcase;
+package com.dlsc.showcase.impl;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

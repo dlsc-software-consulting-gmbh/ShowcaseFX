@@ -29,7 +29,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.dlsc.showcase;
+package com.dlsc.showcase.impl;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.*;
@@ -47,11 +47,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.dlsc.showcase.SamplePageChartHelper.*;
-import static com.dlsc.showcase.SamplePageHelpers.*;
-import static com.dlsc.showcase.SamplePageTableHelper.*;
-import static com.dlsc.showcase.SamplePageTreeHelper.createTreeView;
-import static com.dlsc.showcase.SamplePageTreeTableHelper.createTreeTableView;
+import static com.dlsc.showcase.impl.SamplePageChartHelper.*;
+import static com.dlsc.showcase.impl.SamplePageHelpers.*;
+import static com.dlsc.showcase.impl.SamplePageTableHelper.*;
+import static com.dlsc.showcase.impl.SamplePageTreeHelper.createTreeView;
+import static com.dlsc.showcase.impl.SamplePageTreeTableHelper.createTreeTableView;
 
 /**
  * Page showing every control in every state.
