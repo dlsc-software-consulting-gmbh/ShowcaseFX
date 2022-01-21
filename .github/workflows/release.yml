@@ -18,7 +18,7 @@ jobs:
       - name: 'Set up Java'
         uses: actions/setup-java@v2
         with:
-          java-version: 14
+          java-version: 16
           distribution: 'zulu'
           server-id: central
           server-username: MAVEN_USERNAME
@@ -58,7 +58,7 @@ jobs:
       - name: Release to GitHub
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./mvnw -B --file pom.xml -Prelease -pl :showcase jreleaser:full-release
+        run: ./mvnw -B --file pom.xml -Prelease -pl :showcasefx jreleaser:full-release
 
       - name: JReleaser output
         if: always()
