@@ -31,13 +31,15 @@ public class CssShowcaseView extends Control {
             }
         });
 
-        selectedConfigurationProperty().addListener((it, oldValue, newValue) -> {
-            if (oldValue != null) {
-                oldValue.getStylesheetUrls().forEach(url -> getStylesheets().remove(url));
+        selectedConfigurationProperty().addListener(it -> {
+            getStylesheets().clear();
+
+            CssConfiguration config = getSelectedConfiguration();
+            if (config != null) {
+                config.getStylesheetUrls().forEach(url -> getStylesheets().add(url));
             }
-            if (newValue != null) {
-                newValue.getStylesheetUrls().forEach(url -> getStylesheets().add(url));
-            }
+
+            getStylesheets().forEach(sheet -> System.out.println(sheet));
         });
 
         CssConfiguration modenaOnly = new CssConfiguration("Modena only");
