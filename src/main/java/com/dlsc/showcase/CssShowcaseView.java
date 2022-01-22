@@ -38,8 +38,6 @@ public class CssShowcaseView extends Control {
             if (config != null) {
                 config.getStylesheetUrls().forEach(url -> getStylesheets().add(url));
             }
-
-            getStylesheets().forEach(sheet -> System.out.println(sheet));
         });
 
         CssConfiguration modenaOnly = new CssConfiguration("Modena only");
