@@ -10,7 +10,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
+import javafx.scene.control.Tab;
+import javafx.scene.input.TransferMode;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,18 +34,38 @@ public class CssShowcaseView extends Control {
             }
         });
 
-        selectedConfigurationProperty().addListener(it -> {
-            getStylesheets().clear();
-
-            CssConfiguration config = getSelectedConfiguration();
-            if (config != null) {
-                config.getStylesheetUrls().forEach(url -> getStylesheets().add(url));
-            }
-        });
-
         CssConfiguration modenaOnly = new CssConfiguration("Modena only");
         getConfigurations().add(modenaOnly);
         setSelectedConfiguration(modenaOnly);
+
+        setOnDragEntered(evt -> getStyleClass().add("drag-over"));
+        setOnDragExited(evt -> getStyleClass().remove("drag-over"));
+
+        setOnDragOver(evt -> {
+            if (evt.getDragboard().hasFiles()) {
+                evt.getDragboard().getFiles().forEach(file -> {
+                    if (file.getName().toLowerCase().endsWith(".css")) {
+                        evt.acceptTransferModes(TransferMode.ANY);
+                        return;
+                    }
+                });
+            }
+        });
+
+        setOnDragDropped(evt -> {
+            int count = evt.getDragboard().getFiles().size();
+            String[] urls = new String[count];
+            for (int i = 0; i < evt.getDragboard().getFiles().size(); i++) {
+                try {
+                    urls[i] = evt.getDragboard().getFiles().get(i).toURI().toURL().toExternalForm();
+                    CssConfiguration config = new CssConfiguration("Dropped Stylesheets", urls);
+                    getConfigurations().add(config);
+                    setSelectedConfiguration(config);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -76,7 +99,7 @@ public class CssShowcaseView extends Control {
          * by calling {@link #getStylesheetUrls()} and adding to the list.
          *
          * @param name the name of the configuration, e.g. "My three custom stylesheets".
-         * @param url one or more stylesheet URLs to add to the configuration
+         * @param url  one or more stylesheet URLs to add to the configuration
          */
         public CssConfiguration(String name, String... url) {
             this.name = name;
@@ -114,8 +137,8 @@ public class CssShowcaseView extends Control {
     /**
      * Stores a list of stylesheet configurations that the user can select individually.
      *
-     * @see #selectedConfigurationProperty()
      * @return the list of available configurations
+     * @see #selectedConfigurationProperty()
      */
     public final ListProperty<CssConfiguration> configurationsProperty() {
         return configurations;
@@ -142,5 +165,24 @@ public class CssShowcaseView extends Control {
 
     public final void setSelectedConfiguration(CssConfiguration selectedConfiguration) {
         this.selectedConfiguration.set(selectedConfiguration);
+    }
+
+    private final ListProperty<Tab> additionalTabs = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    public ObservableList<Tab> getAdditionalTabs() {
+        return additionalTabs.get();
+    }
+
+    /**
+     * A list of application specific tabs that will be added to the built-in tabs.
+     *
+     * @return list of additional tabs
+     */
+    public ListProperty<Tab> additionalTabsProperty() {
+        return additionalTabs;
+    }
+
+    public void setAdditionalTabs(ObservableList<Tab> additionalTabs) {
+        this.additionalTabs.set(additionalTabs);
     }
 }

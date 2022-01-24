@@ -81,3 +81,8 @@
     /*-fx-font: 15px "Ubuntu";*/
     -fx-font: 13px "Lucida Sans";
 }
+
+.drag-over {
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+}

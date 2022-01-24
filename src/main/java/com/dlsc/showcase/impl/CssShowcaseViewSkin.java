@@ -34,6 +34,7 @@ package com.dlsc.showcase.impl;
 import com.dlsc.showcase.CssShowcaseView;
 import com.dlsc.showcase.CssShowcaseView.CssConfiguration;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.NodeOrientation;
 import javafx.scene.Node;
@@ -51,8 +52,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
-
-    public static final String SKIN_BASE = "com/sun/javafx/scene/control/skin/";
 
     static {
         System.getProperties().put("javafx.pseudoClassOverrideEnabled", "true");
@@ -73,8 +72,25 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
 
     public CssShowcaseViewSkin(CssShowcaseView view) {
         super(view);
+
         getChildren().add(root = new BorderPane());
+        root.getStyleClass().add("root");
+
+        view.selectedConfigurationProperty().addListener(it -> updateStylesheets());
+        view.additionalTabsProperty().addListener((Observable it) -> updateView(false, 0, null));
         updateView(false, 0, null);
+        updateStylesheets();
+    }
+
+    private void updateStylesheets() {
+        CssShowcaseView view = getSkinnable();
+
+        root.getStylesheets().clear();
+
+        CssConfiguration config = view.getSelectedConfiguration();
+        if (config != null) {
+            config.getStylesheetUrls().forEach(url -> root.getStylesheets().add(url));
+        }
     }
 
     public Map<String, Node> getContent() {
@@ -114,6 +130,7 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
             tab5.setContent(new ScrollPane(combinationsTest = FXMLLoader.load(CssShowcaseViewSkin.class.getResource("CombinationTest.fxml"))));
 
             contentTabs.getTabs().addAll(tab1, tab2, tab3, tab4, tab5);
+            contentTabs.getTabs().addAll(getSkinnable().getAdditionalTabs());
             contentTabs.getSelectionModel().select(selectedTab);
 
             // height test set selection for
