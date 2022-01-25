@@ -2,6 +2,12 @@ package com.dlsc.showcase;
 
 import com.dlsc.showcase.impl.CssShowcaseViewSkin;
 import fr.brouillard.oss.cssfx.CSSFX;
+import fr.brouillard.oss.cssfx.CSSFX.CSSFXConfig;
+import fr.brouillard.oss.cssfx.api.URIToPathConverter;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javafx.beans.Observable;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -33,7 +39,9 @@ public class CssShowcaseView extends Control {
 
         sceneProperty().addListener(it -> {
             if (getScene() != null) {
-                CSSFX.start(this);
+                CSSFX.onlyFor(this)
+                    .addConverter(ISO_FILE_CONVERTER)
+                    .start();
             }
         });
 
@@ -199,4 +207,20 @@ public class CssShowcaseView extends Control {
     public void setAdditionalTabs(ObservableList<Tab> additionalTabs) {
         this.additionalTabs.set(additionalTabs);
     }
+
+    /**
+     * CSSFX fake converter that returns the same file as the one provided.
+     * By doing that changes in that file will be handled automatically by CSSFX
+     */
+    private static URIToPathConverter ISO_FILE_CONVERTER = uri -> {
+        if (uri != null && uri.startsWith("file:")) {
+            try {
+                Path isoPath = Paths.get(new URI(uri));
+                return isoPath;
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    };
 }
