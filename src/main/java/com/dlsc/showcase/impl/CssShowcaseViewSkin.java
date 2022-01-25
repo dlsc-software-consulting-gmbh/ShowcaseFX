@@ -41,6 +41,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.util.StringConverter;
@@ -69,12 +70,22 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
     private ComboBox<CssConfiguration> stylesheetsBox;
     private ToggleButton retinaButton, rtlButton;
     private TabPane contentTabs;
+    private Pane contentGroup;
 
     public CssShowcaseViewSkin(CssShowcaseView view) {
         super(view);
 
-        getChildren().add(root = new BorderPane());
-        root.getStyleClass().add("root");
+        root = new BorderPane();
+
+        Label dropLabel = new Label("Drop one or more CSS files ...");
+
+        StackPane glasspane = new StackPane(dropLabel);
+        glasspane.setMouseTransparent(true);
+        glasspane.getStyleClass().add("glass-pane");
+
+        StackPane wrapper = new StackPane(root, glasspane);
+
+        getChildren().add(wrapper);
 
         view.selectedConfigurationProperty().addListener(it -> updateStylesheets());
         view.additionalTabsProperty().addListener((Observable it) -> updateView(false, 0, null));
@@ -85,11 +96,11 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
     private void updateStylesheets() {
         CssShowcaseView view = getSkinnable();
 
-        root.getStylesheets().clear();
+        contentGroup.getStylesheets().clear();
 
         CssConfiguration config = view.getSelectedConfiguration();
         if (config != null) {
-            config.getStylesheetUrls().forEach(url -> root.getStylesheets().add(url));
+            contentGroup.getStylesheets().addAll(config.getStylesheetUrls());
         }
     }
 
@@ -116,18 +127,23 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
 
             Tab tab1 = new Tab("All Controls");
             tab1.setContent(samplePageNavigation);
+            tab1.setClosable(false);
 
             Tab tab2 = new Tab("Mosaic");
             tab2.setContent(new ScrollPane(mosaic = FXMLLoader.load(CssShowcaseViewSkin.class.getResource("ui-mosaic.fxml"))));
+            tab2.setClosable(false);
 
             Tab tab3 = new Tab("Alignment");
             tab3.setContent(new ScrollPane(heightTest = FXMLLoader.load(CssShowcaseViewSkin.class.getResource("SameHeightTest.fxml"))));
+            tab3.setClosable(false);
 
             Tab tab4 = new Tab("Windows");
             tab4.setContent(new ScrollPane(simpleWindows = new SimpleWindowPage()));
+            tab4.setClosable(false);
 
             Tab tab5 = new Tab("Combinations");
             tab5.setContent(new ScrollPane(combinationsTest = FXMLLoader.load(CssShowcaseViewSkin.class.getResource("CombinationTest.fxml"))));
+            tab5.setClosable(false);
 
             contentTabs.getTabs().addAll(tab1, tab2, tab3, tab4, tab5);
             contentTabs.getTabs().addAll(getSkinnable().getAdditionalTabs());
@@ -188,7 +204,7 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
 
             toolBar.setId("TestAppToolbar");
             // Create content group used for scaleing @2x
-            Pane contentGroup = new Pane() {
+            contentGroup = new Pane() {
                 @Override
                 protected void layoutChildren() {
                     double scale = contentTabs.getTransforms().isEmpty() ? 1 : ((Scale) contentTabs.getTransforms().get(0)).getX();
@@ -196,6 +212,7 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
                 }
             };
             contentGroup.getChildren().add(contentTabs);
+            contentGroup.getStyleClass().add("root");
 
             // populate root
             root.setTop(toolBar);

@@ -2,6 +2,7 @@ package com.dlsc.showcase;
 
 import com.dlsc.showcase.impl.CssShowcaseViewSkin;
 import fr.brouillard.oss.cssfx.CSSFX;
+import javafx.beans.Observable;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -13,9 +14,11 @@ import javafx.scene.control.Skin;
 import javafx.scene.control.Tab;
 import javafx.scene.input.TransferMode;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A control that showcases all JavaFX controls individually and in combination with
@@ -26,7 +29,7 @@ import java.util.List;
 public class CssShowcaseView extends Control {
 
     public CssShowcaseView() {
-        getStyleClass().add("css-stylesheet-view");
+        getStyleClass().add("css-showcase-view");
 
         sceneProperty().addListener(it -> {
             if (getScene() != null) {
@@ -37,6 +40,13 @@ public class CssShowcaseView extends Control {
         CssConfiguration modenaOnly = new CssConfiguration("Modena only");
         getConfigurations().add(modenaOnly);
         setSelectedConfiguration(modenaOnly);
+
+        getConfigurations().addListener((Observable it) -> {
+            if (getConfigurations().isEmpty()) {
+                getConfigurations().add(modenaOnly);
+                setSelectedConfiguration(modenaOnly);
+            }
+        });
 
         setOnDragEntered(evt -> getStyleClass().add("drag-over"));
         setOnDragExited(evt -> getStyleClass().remove("drag-over"));
@@ -53,12 +63,16 @@ public class CssShowcaseView extends Control {
         });
 
         setOnDragDropped(evt -> {
-            int count = evt.getDragboard().getFiles().size();
+            List<File> files = evt.getDragboard().getFiles();
+            int count = files.size();
             String[] urls = new String[count];
-            for (int i = 0; i < evt.getDragboard().getFiles().size(); i++) {
+
+
+            for (int i = 0; i < files.size(); i++) {
                 try {
-                    urls[i] = evt.getDragboard().getFiles().get(i).toURI().toURL().toExternalForm();
-                    CssConfiguration config = new CssConfiguration("Dropped Stylesheets", urls);
+                    File file = files.get(i);
+                    urls[i] = file.toURI().toURL().toExternalForm();
+                    CssConfiguration config = new CssConfiguration(files.stream().map(f -> f.getName()).collect(Collectors.joining(", ")), urls);
                     getConfigurations().add(config);
                     setSelectedConfiguration(config);
                 } catch (MalformedURLException e) {

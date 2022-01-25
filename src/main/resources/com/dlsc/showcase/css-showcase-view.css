@@ -82,7 +82,16 @@
     -fx-font: 13px "Lucida Sans";
 }
 
-.drag-over {
-    -fx-border-color: red;
-    -fx-border-width: 2px;
+.css-showcase-view .glass-pane .label {
+    visibility: false;
+    -fx-font-size: 2em;
+}
+
+.css-showcase-view.drag-over .glass-pane {
+    -fx-background-color: rgba(0, 0, 0, .75);
+}
+
+.css-showcase-view.drag-over .glass-pane .label {
+    visibility: true;
+    -fx-text-fill: white;
 }

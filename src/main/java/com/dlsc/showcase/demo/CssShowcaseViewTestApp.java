@@ -33,20 +33,82 @@ package com.dlsc.showcase.demo;
 
 import com.dlsc.showcase.CssShowcaseView;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CssShowcaseViewTestApp extends Application {
 
+    private CssShowcaseView view;
+
     @Override
     public void start(Stage stage) {
-        CssShowcaseView view = new CssShowcaseView();
+        view = new CssShowcaseView();
 
-        Scene scene = new Scene(view, 1024, 768);
+        MenuItem loadFile = new MenuItem("Load CSS Stylesheets ...");
+        loadFile.setOnAction(evt -> loadFile());
+        loadFile.setAccelerator(KeyCombination.keyCombination("shortcut+o"));
+
+        MenuItem clearStylesheets = new MenuItem("Clear");
+        clearStylesheets.setOnAction(evt -> view.getConfigurations().clear());
+        clearStylesheets.setAccelerator(KeyCombination.keyCombination("shortcut+e"));
+
+        MenuItem exit = new MenuItem("Quit");
+        exit.setOnAction(evt -> Platform.exit());
+        exit.setAccelerator(KeyCombination.keyCombination("shortcut+q"));
+
+        Menu menu = new Menu("File");
+        menu.getItems().addAll(loadFile, clearStylesheets, exit);
+
+        MenuBar menuBar = new MenuBar(menu);
+        menuBar.setUseSystemMenuBar(false);
+
+        BorderPane borderPane = new BorderPane(view);
+        borderPane.setTop(menuBar);
+
+        Scene scene = new Scene(borderPane, 1024, 768);
 
         stage.setScene(scene);
         stage.setTitle("ShowcaseFX");
         stage.show();
+    }
+
+    private FileChooser fileChooser;
+
+    private void loadFile() {
+        if (fileChooser == null) {
+            fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new ExtensionFilter("CSS Stylesheets", "*.css"));
+            fileChooser.setSelectedExtensionFilter(fileChooser.getExtensionFilters().get(0));
+        }
+
+        List<File> files = fileChooser.showOpenMultipleDialog(view.getScene().getWindow());
+        if (files != null) {
+            String[] urls = files.stream().map(file -> {
+                try {
+                    return file.toURI().toURL().toExternalForm();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                return "";
+            }).toArray(String[]::new);
+
+            CssShowcaseView.CssConfiguration configuration = new CssShowcaseView.CssConfiguration( files.stream().map(file -> file.getName()).collect(Collectors.joining(", ")), urls);
+            view.getConfigurations().add(configuration);
+            view.setSelectedConfiguration(configuration);
+        }
     }
 
     public static void main(String[] args) {
