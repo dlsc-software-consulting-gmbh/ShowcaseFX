@@ -6,7 +6,11 @@
 
 This project contains a single control called `CssShowcaseView` that can be used to preview the results produced by adding one or more stylesheets on top of the built-in modena stylesheet. This view can be run as part of a standalone CSS testing application or integrated into a customer application as a developer option. 
 
-### Usage
+### Standalone Usage
+
+The project includes an application class called ShowcaseFX. It will open a window with the CssShowcaseView as its primary control. The user can load stylesheets via the **_File_** menu or via drag and drop. Both operations can be done with either a single file or multiple files at the same time. To run the application simply call `mvn javafx:run` or download an executable of your choice.
+
+### Embedded Usage
 
 ```java
 // A CSS configuration with three stylesheets that will be used to

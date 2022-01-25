@@ -37,7 +37,7 @@ echo detecting required modules
   --multi-release %JAVA_VERSION% ^
   --ignore-missing-deps ^
   --class-path "target\installer\input\libs\*" ^
-  --print-module-deps target\classes\com\dlsc\showcase\demo\CssShowcaseViewTestApp.class target\classes\com\dlsc\showcase\demo\CssShowcaseViewTestAppLauncher.class > temp.txt
+  --print-module-deps target\classes\com\dlsc\showcase\app\ShowcaseFXLauncher.class target\classes\com\dlsc\showcase\app\ShowcaseFX.class > temp.txt
 
 set /p detected_modules=<temp.txt
 
@@ -78,7 +78,7 @@ call "%JAVA_HOME%\bin\jpackage" ^
   --dest target/installer ^
   --input target/installer/input/libs ^
   --name "%APP_NAME%" ^
-  --main-class com.dlsc.showcase.CssShowcaseViewTestAppLauncher ^
+  --main-class com.dlsc.showcase.app.ShowcaseFXLauncher ^
   --main-jar %MAIN_JAR% ^
   --java-options -Xmx2048m ^
   --runtime-image target/java-runtime ^

@@ -45,7 +45,7 @@ detected_modules=`$JAVA_HOME/bin/jdeps \
   --ignore-missing-deps \
   --print-module-deps \
   --class-path "target/installer/input/libs/*" \
-    target/classes/com/dlsc/showcase/demo/CssShowcaseViewTestApp.class target/classes/com/dlsc/showcase/demo/CssShowcaseViewTestAppLauncher.class`
+    target/classes/com/dlsc/showcase/app/ShowcaseFX.class target/classes/com/dlsc/showcase/app/ShowcaseFXLauncher.class`
 echo "detected modules: ${detected_modules}"
 
 
@@ -84,7 +84,7 @@ $JAVA_HOME/bin/jpackage \
   --dest target/installer \
   --input target/installer/input/libs \
   --name "${APP_NAME}" \
-  --main-class com.dlsc.showcase.demo.CssShowcaseViewTestAppLauncher \
+  --main-class com.dlsc.showcase.app.ShowcaseFXLauncher \
   --main-jar ${MAIN_JAR} \
   --runtime-image target/java-runtime \
   --app-version ${APP_VERSION} \

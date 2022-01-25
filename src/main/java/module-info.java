@@ -10,5 +10,5 @@ open module com.dlsc.showcasefx {
     requires fr.brouillard.oss.cssfx;
 
     exports com.dlsc.showcase;
-    exports com.dlsc.showcase.demo;
+    exports com.dlsc.showcase.app;
 }

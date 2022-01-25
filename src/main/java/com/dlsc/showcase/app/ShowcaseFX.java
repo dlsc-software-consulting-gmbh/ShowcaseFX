@@ -29,7 +29,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.dlsc.showcase.demo;
+package com.dlsc.showcase.app;
 
 import com.dlsc.showcase.CssShowcaseView;
 import javafx.application.Application;
@@ -49,7 +49,7 @@ import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CssShowcaseViewTestApp extends Application {
+public class ShowcaseFX extends Application {
 
     private CssShowcaseView view;
 
