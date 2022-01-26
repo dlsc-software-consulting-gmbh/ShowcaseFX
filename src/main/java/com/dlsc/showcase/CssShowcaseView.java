@@ -2,12 +2,7 @@ package com.dlsc.showcase;
 
 import com.dlsc.showcase.impl.CssShowcaseViewSkin;
 import fr.brouillard.oss.cssfx.CSSFX;
-import fr.brouillard.oss.cssfx.CSSFX.CSSFXConfig;
 import fr.brouillard.oss.cssfx.api.URIToPathConverter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import javafx.beans.Observable;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -22,6 +17,10 @@ import javafx.scene.input.TransferMode;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -75,18 +74,18 @@ public class CssShowcaseView extends Control {
             int count = files.size();
             String[] urls = new String[count];
 
-
             for (int i = 0; i < files.size(); i++) {
                 try {
                     File file = files.get(i);
                     urls[i] = file.toURI().toURL().toExternalForm();
-                    CssConfiguration config = new CssConfiguration(files.stream().map(f -> f.getName()).collect(Collectors.joining(", ")), urls);
-                    getConfigurations().add(config);
-                    setSelectedConfiguration(config);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
             }
+
+            CssConfiguration config = new CssConfiguration(files.stream().map(f -> f.getName()).collect(Collectors.joining(", ")), urls);
+            getConfigurations().add(config);
+            setSelectedConfiguration(config);
         });
     }
 
