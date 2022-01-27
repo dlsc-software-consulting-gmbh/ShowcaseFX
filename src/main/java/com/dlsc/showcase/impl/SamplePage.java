@@ -1043,9 +1043,10 @@ public class SamplePage extends ListView<SamplePage.SectionItem> {
         return sectionItems;
     }
 
-    static class SectionListCell extends ListCell<SectionItem> {
+    // do not make static ... jpro
+    private Map<SectionItem, Node> cache = new HashMap<>();
 
-        private static Map<SectionItem, Node> cache = new HashMap<>();
+    class SectionListCell extends ListCell<SectionItem> {
 
         private Label nameLabel = new Label();
         private HBox box = new HBox();
