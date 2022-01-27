@@ -201,12 +201,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </TabPane>
                 <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
-                        <Tab text="HTML Editor">
-                            <content>
-                                <HTMLEditor minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0"
-                                            prefWidth="50.0"/>
-                            </content>
-                        </Tab>
                         <Tab text="Untitled Tab 2">
                             <content>
                                 <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0"
@@ -285,9 +279,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </SplitPane>
                 <SplitPane dividerPositions="0.5" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
                     <items>
-                        <HTMLEditor
-                                htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;Dude's Html Editor&lt;/body&gt;&lt;/html&gt;"
-                                minWidth="20.0" prefHeight="190.0" prefWidth="50.0"/>
                         <TextArea minWidth="20.0" prefHeight="30.0" prefWidth="30.0"
                                   text="Text Area with Lots of text&#10;&#10;&#10;s&#10;a&#10;d&#10;s&#10;d&#10;sd&#10;&#10;s&#10;d&#10;s&#10;d&#10;&#10;s"
                                   wrapText="true"/>

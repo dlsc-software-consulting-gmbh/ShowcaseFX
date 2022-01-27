@@ -96,6 +96,10 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
     private void updateStylesheets() {
         CssShowcaseView view = getSkinnable();
 
+        if (contentGroup == null) {
+            return;
+        }
+
         contentGroup.getStylesheets().clear();
 
         CssConfiguration config = view.getSelectedConfiguration();

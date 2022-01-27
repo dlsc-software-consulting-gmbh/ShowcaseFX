@@ -675,19 +675,23 @@ public class SamplePage extends GridPane {
                 tArea1, tArea2, tArea3, tArea4,
                 withState(tArea5, "focused"),
                 withState(tArea6, "disabled"));
-        newSection(
-                "HTMLEditor:",
-                new HTMLEditor() {{
-                    setHtmlText("Hello <b>Bold</b> Text");
-                    setPrefSize(650, 120);
-                }});
-        newSection(
-                "HTMLEditor\nFocused:",
-                withState(new HTMLEditor() {{
-                    setHtmlText("<i>Focused</i>");
-                    setPrefSize(650, 120);
-                }}, "focused")
-        );
+
+        if (!Boolean.getBoolean("jpro")) {
+            newSection(
+                    "HTMLEditor:",
+                    new HTMLEditor() {{
+                        setHtmlText("Hello <b>Bold</b> Text");
+                        setPrefSize(650, 120);
+                    }});
+            newSection(
+                    "HTMLEditor\nFocused:",
+                    withState(new HTMLEditor() {{
+                        setHtmlText("<i>Focused</i>");
+                        setPrefSize(650, 120);
+                    }}, "focused")
+            );
+        }
+
         newDetailedSection(
                 new String[]{"ToolBar (H|TOP):", "normal", "overflow", "disabled"},
                 createToolBar(Side.TOP, false, false),
@@ -891,16 +895,20 @@ public class SamplePage extends GridPane {
         newDetailedSection(
                 new String[]{"ToolTip:", "inline", "inline + graphic", "popup"},
                 label1, label2, vb);
-        newSection(
-                "MenuBar & ContextMenu:",
-                createMenuBar(),
-                createContextMenu()
-        );
-        newSection(
-                "Menus:",
-                createInlineMenu(false),
-                createInlineMenu(true)
-        );
+
+        if (!Boolean.getBoolean("jpro")) {
+            newSection(
+                    "MenuBar & ContextMenu:",
+                    createMenuBar(),
+                    createContextMenu()
+            );
+            newSection(
+                    "Menus:",
+                    createInlineMenu(false),
+                    createInlineMenu(true)
+            );
+        }
+
         newSection(
                 "AreaChart:",
                 createAreaChart(false)
