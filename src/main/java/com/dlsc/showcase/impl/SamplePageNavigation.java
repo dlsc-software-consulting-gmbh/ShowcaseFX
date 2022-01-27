@@ -31,31 +31,26 @@
  */
 package com.dlsc.showcase.impl;
 
+import javafx.collections.transformation.SortedList;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Comparator;
 
 /**
  * Container for samplePage that has scrolling and knows how to navigate to sections
  */
 public class SamplePageNavigation extends BorderPane {
     private SamplePage samplePage = new SamplePage();
-    private ScrollPane scrollPane = new ScrollPane(samplePage);
-    private boolean isLocalChange;
-    private SamplePage.Section currentSection;
 
     public SamplePageNavigation() {
-        scrollPane.setId("SamplePageScrollPane");
-        setCenter(scrollPane);
+        setCenter(samplePage);
+
         ToolBar toolBar = new ToolBar();
         toolBar.setId("SamplePageToolBar");
         toolBar.getStyleClass().add("bottom");
@@ -65,60 +60,15 @@ public class SamplePageNavigation extends BorderPane {
 
         toolBar.getItems().addAll(spacer, new Label("Go to section:"));
 
-        ChoiceBox<SamplePage.Section> sectionChoiceBox = new ChoiceBox<>();
-        sectionChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> setCurrentSection(newValue));
-        List<SamplePage.Section> sections = new ArrayList<>(samplePage.getSections());
-        Collections.sort(sections, (o1, o2) -> o1.name.compareTo(o2.name));
-        sectionChoiceBox.getItems().addAll(sections);
+        SortedList<SamplePage.SectionItem> sortedList = new SortedList<>(samplePage.getSectionItems());
+        sortedList.setComparator(Comparator.comparing(SamplePage.SectionItem::toString));
+
+        ChoiceBox<SamplePage.SectionItem> sectionChoiceBox = new ChoiceBox<>();
+        sectionChoiceBox.setItems(sortedList);
+
+        sectionChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> samplePage.scrollTo(newValue));
         toolBar.getItems().add(sectionChoiceBox);
         setBottom(toolBar);
-
-        scrollPane.vvalueProperty().addListener((observable, oldValue, newValue) -> {
-            if (!isLocalChange) {
-                isLocalChange = true;
-                // calc scroll position relative to scroll pane content
-                double posPixels = samplePage.getLayoutBounds().getHeight() * newValue.doubleValue();
-                // move to top of view port
-                posPixels -= scrollPane.getLayoutBounds().getHeight() * newValue.doubleValue();
-                // move to center of view port
-                posPixels += scrollPane.getLayoutBounds().getHeight() * 0.5;
-                // find section that contains view port center
-                currentSection = null;
-                for (SamplePage.Section section : samplePage.getSections()) {
-                    if (section.box.getBoundsInParent().getMaxY() > posPixels) {
-                        currentSection = section;
-                        break;
-                    }
-                }
-                sectionChoiceBox.getSelectionModel().select(currentSection);
-                isLocalChange = false;
-            }
-
-        });
-    }
-
-    public SamplePage.Section getCurrentSection() {
-        return currentSection;
-    }
-
-    public void setCurrentSection(SamplePage.Section currentSection) {
-        this.currentSection = currentSection;
-        if (!isLocalChange) {
-            isLocalChange = true;
-            double pos = 0;
-            if (currentSection != null) {
-                double sectionBoxCenterY = currentSection.box.getBoundsInParent().getMinY()
-                        + (currentSection.box.getBoundsInParent().getHeight() / 2);
-                // move to center of view port
-                pos -= scrollPane.getLayoutBounds().getHeight() * 0.5;
-                // move to top of view port
-                pos += scrollPane.getLayoutBounds().getHeight() * (sectionBoxCenterY / samplePage.getLayoutBounds().getHeight());
-                // find relative pos
-                pos = sectionBoxCenterY / samplePage.getLayoutBounds().getHeight();
-            }
-            scrollPane.setVvalue(pos);
-            isLocalChange = false;
-        }
     }
 
     public SamplePage getSamplePage() {

@@ -42,12 +42,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -88,8 +86,8 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
         getChildren().add(wrapper);
 
         view.selectedConfigurationProperty().addListener(it -> updateStylesheets());
-        view.additionalTabsProperty().addListener((Observable it) -> updateView(false, 0, null));
-        updateView(false, 0, null);
+        view.additionalTabsProperty().addListener((Observable it) -> updateView());
+        updateView();
         updateStylesheets();
     }
 
@@ -121,7 +119,7 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
         contentTabs.requestLayout();
     }
 
-    private void updateView(boolean retina, int selectedTab, SamplePage.Section scrolledSection) {
+    private void updateView() {
         try {
             // Create sample page and nav
             samplePageNavigation = new SamplePageNavigation();
@@ -151,7 +149,6 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
 
             contentTabs.getTabs().addAll(tab1, tab2, tab3, tab4, tab5);
             contentTabs.getTabs().addAll(getSkinnable().getAdditionalTabs());
-            contentTabs.getSelectionModel().select(selectedTab);
 
             // height test set selection for
             Platform.runLater(() -> {
@@ -165,7 +162,6 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
 
             // Create Toolbar
             retinaButton = new ToggleButton("@2x");
-            retinaButton.setSelected(retina);
             retinaButton.setOnAction(event -> {
                 ToggleButton btn = (ToggleButton) event.getSource();
                 setRetinaMode(btn.isSelected());
@@ -198,12 +194,6 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
                     stylesheetsBox,
                     rtlButton,
                     retinaButton
-//                    new Label("Base:"),
-//                    createBaseColorPicker(),
-//                    new Label("Background:"),
-//                    createBackgroundColorPicker(),
-//                    new Label("Accent:"),
-//                    createAccentColorPicker()
             );
 
             toolBar.setId("TestAppToolbar");
@@ -227,110 +217,8 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
             heightTest.getStyleClass().add("needs-background");
             combinationsTest.getStyleClass().add("needs-background");
             simpleWindows.setModena(true);
-
-            // apply retina scale
-            if (retina) {
-                contentTabs.getTransforms().setAll(new Scale(2, 2));
-            }
-            root.applyCss();
-            // update state
-            Platform.runLater(() -> {
-                // move focus out of the way
-                stylesheetsBox.requestFocus();
-                samplePageNavigation.setCurrentSection(scrolledSection);
-            });
         } catch (IOException ex) {
             Logger.getLogger(CssShowcaseViewSkin.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    private ColorPicker createBaseColorPicker() {
-        ColorPicker colorPicker = new ColorPicker(Color.TRANSPARENT);
-        colorPicker.getCustomColors().addAll(
-                Color.TRANSPARENT,
-                Color.web("#f3622d"),
-                Color.web("#fba71b"),
-                Color.web("#57b757"),
-                Color.web("#41a9c9"),
-                Color.web("#888"),
-                Color.RED,
-                Color.ORANGE,
-                Color.YELLOW,
-                Color.GREEN,
-                Color.CYAN,
-                Color.BLUE,
-                Color.PURPLE,
-                Color.MAGENTA,
-                Color.BLACK
-        );
-        colorPicker.valueProperty().addListener((observable, oldValue, c) -> setBaseColor(c));
-        colorPicker.setDisable(false);
-        return colorPicker;
-    }
-
-    public void setBaseColor(Color c) {
-    }
-
-    private ColorPicker createBackgroundColorPicker() {
-        ColorPicker colorPicker = new ColorPicker(Color.TRANSPARENT);
-        colorPicker.getCustomColors().addAll(
-                Color.TRANSPARENT,
-                Color.web("#f3622d"),
-                Color.web("#fba71b"),
-                Color.web("#57b757"),
-                Color.web("#41a9c9"),
-                Color.web("#888"),
-                Color.RED,
-                Color.ORANGE,
-                Color.YELLOW,
-                Color.GREEN,
-                Color.CYAN,
-                Color.BLUE,
-                Color.PURPLE,
-                Color.MAGENTA,
-                Color.BLACK
-        );
-        colorPicker.valueProperty().addListener((observable, oldValue, c) -> {
-        });
-        colorPicker.setDisable(false);
-        return colorPicker;
-    }
-
-    private ColorPicker createAccentColorPicker() {
-        ColorPicker colorPicker = new ColorPicker(Color.web("#0096C9"));
-        colorPicker.getCustomColors().addAll(
-                Color.TRANSPARENT,
-                Color.web("#0096C9"),
-                Color.web("#4fb6d6"),
-                Color.web("#f3622d"),
-                Color.web("#fba71b"),
-                Color.web("#57b757"),
-                Color.web("#41a9c9"),
-                Color.web("#888"),
-                Color.RED,
-                Color.ORANGE,
-                Color.YELLOW,
-                Color.GREEN,
-                Color.CYAN,
-                Color.BLUE,
-                Color.PURPLE,
-                Color.MAGENTA,
-                Color.BLACK
-        );
-        colorPicker.valueProperty().addListener((observable, oldValue, c) -> setAccentColor(c));
-        colorPicker.setDisable(false);
-        return colorPicker;
-    }
-
-    public void setAccentColor(Color c) {
-    }
-
-
-    private String colorToRGBA(Color color) {
-        return String.format((Locale) null, "rgba(%d, %d, %d, %f)",
-                (int) Math.round(color.getRed() * 255),
-                (int) Math.round(color.getGreen() * 255),
-                (int) Math.round(color.getBlue() * 255),
-                color.getOpacity());
     }
 }

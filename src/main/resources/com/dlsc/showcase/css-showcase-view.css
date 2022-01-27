@@ -95,3 +95,11 @@
     visibility: true;
     -fx-text-fill: white;
 }
+
+.section-list-cell {
+    -fx-background-color: white;
+}
+
+.section-list-cell .name-label {
+    -fx-pref-width: 200px;
+}

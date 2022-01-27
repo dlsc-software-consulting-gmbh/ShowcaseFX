@@ -227,18 +227,18 @@ public class SamplePageHelpers {
         return items.toArray(new MenuItem[items.size()]);
     }
 
-    static MenuBar createMenuBar() {
-        MenuBar mb = new MenuBar();
-        mb.setUseSystemMenuBar(false);
-        mb.getMenus().addAll(
-                createMenu("File"),
-                createMenu("Edit"),
-                createMenu("View"),
-                createMenu("Help")
-        );
-        Platform.runLater(() -> new ArrayList<>(mb.lookupAll(".menu")).get(1).pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), true));
-        return mb;
-    }
+//    static MenuBar createMenuBar() {
+//        MenuBar mb = new MenuBar();
+//        mb.setUseSystemMenuBar(false);
+//        mb.getMenus().addAll(
+//                createMenu("File"),
+//                createMenu("Edit"),
+//                createMenu("View"),
+//                createMenu("Help")
+//        );
+//        Platform.runLater(() -> new ArrayList<>(mb.lookupAll(".menu")).get(1).pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), true));
+//        return mb;
+//    }
 
     static Menu createMenu(String name) {
         Menu m = new Menu(name);
@@ -259,30 +259,30 @@ public class SamplePageHelpers {
         // create a place holder container
         StackPane contextMenu = new StackPane();
         // show context menu then steal and place inline
-        Platform.runLater(() -> {
-            menu.show(contextMenu, -1000, -1000);
-            menu.hide();
-            Platform.runLater(() -> {
-                Node menuContent = menu.getSkin().getNode();
-                contextMenu.getChildren().add(menuContent);
-                menuContent.setMouseTransparent(true);
-//                        System.out.println("menuContent = " + menuContent);
-//                        System.out.println("menuContent.lookupAll(\".menu-item\") = " + menuContent.lookupAll(".menu-item"));
-
-//                        Platform.runLater(new Runnable() {
-//                            @Override public void run() {
-////                        if (selectAll) {
-////                            for (Node n: menuContent.lookupAll(".menu-item")) {
-////                                n.pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), true);
+//        Platform.runLater(() -> {
+//            menu.show(contextMenu, -1000, -1000);
+//            menu.hide();
+//            Platform.runLater(() -> {
+//                Node menuContent = menu.getSkin().getNode();
+//                contextMenu.getChildren().add(menuContent);
+//                menuContent.setMouseTransparent(true);
+////                        System.out.println("menuContent = " + menuContent);
+////                        System.out.println("menuContent.lookupAll(\".menu-item\") = " + menuContent.lookupAll(".menu-item"));
+//
+////                        Platform.runLater(new Runnable() {
+////                            @Override public void run() {
+//////                        if (selectAll) {
+//////                            for (Node n: menuContent.lookupAll(".menu-item")) {
+//////                                n.pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), true);
+//////                            }
+//////                        } else {
+////                            new ArrayList<Node>(menuContent.lookupAll(".menu-item")).get(2)
+////                                    .pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), true);
+//////                        }
 ////                            }
-////                        } else {
-//                            new ArrayList<Node>(menuContent.lookupAll(".menu-item")).get(2)
-//                                    .pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), true);
-////                        }
-//                            }
-//                        });
-            });
-        });
+////                        });
+//            });
+//        });
         return contextMenu;
     }
 

@@ -31,61 +31,69 @@
  */
 package com.dlsc.showcase.impl;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.*;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static com.dlsc.showcase.impl.SamplePageChartHelper.*;
 import static com.dlsc.showcase.impl.SamplePageHelpers.*;
-import static com.dlsc.showcase.impl.SamplePageTableHelper.*;
+import static com.dlsc.showcase.impl.SamplePageTableHelper.createTableView;
+import static com.dlsc.showcase.impl.SamplePageTableHelper.createTableViewSimple;
 import static com.dlsc.showcase.impl.SamplePageTreeHelper.createTreeView;
 import static com.dlsc.showcase.impl.SamplePageTreeTableHelper.createTreeTableView;
 
 /**
  * Page showing every control in every state.
  */
-public class SamplePage extends GridPane {
-    private int rowIndex;
+public class SamplePage extends ListView<SamplePage.SectionItem> {
     private Map<String, Node> content = new HashMap<>();
-    private List<Section> sections = new ArrayList<>();
+    private ObservableList<SectionItem> sectionItems = FXCollections.observableArrayList();
 
     public SamplePage() {
-        setVgap(25);
-        setHgap(15);
-        setPadding(new Insets(15));
-        newSection("Label:",
+        setItems(sectionItems);
+        setCellFactory(view -> new SectionListCell());
+
+        newSection("Label:", () -> new Node[]{
                 new Label("Label"),
-                withState(new Label("Disabled"), "disabled"));
+                withState(new Label("Disabled"), "disabled")
+        });
+
         newSection("Button:",
-                new Button("Button"),
-                withState(new Button("Hover"), "hover"),
-                withState(new Button("Armed"), "armed"),
-                withState(new Button("Focused"), "focused"),
-                withState(new Button("Focused & Hover"), "focused, hover"),
-                withState(new Button("Focused & Armed"), "focused, armed"),
-                withState(new Button("Disabled"), "disabled"));
+                () -> new Node[]{
+                        new Button("Button"),
+                        withState(new Button("Hover"), "hover"),
+                        withState(new Button("Armed"), "armed"),
+                        withState(new Button("Focused"), "focused"),
+                        withState(new Button("Focused & Hover"), "focused, hover"),
+                        withState(new Button("Focused & Armed"), "focused, armed"),
+                        withState(new Button("Disabled"), "disabled")
+                });
+
         Button defaultButton = new Button("Button");
         defaultButton.setDefaultButton(true);
-        newSection("Default Button:",
+        newSection("Default Button:", () -> new Node[]{
                 defaultButton,
                 withState(new Button("Hover"), "default, hover"),
                 withState(new Button("Armed"), "default, armed"),
                 withState(new Button("Focused"), "default, focused"),
                 withState(new Button("Focused & Hover"), "default, focused, hover"),
                 withState(new Button("Focused & Armed"), "default, focused, armed"),
-                withState(new Button("Disabled"), "default, disabled"));
+                withState(new Button("Disabled"), "default, disabled")
+        });
+
         Button b1 = new Button("Button");
         b1.setStyle("-fx-base: #f3622d;");
         Button b2 = new Button("Button");
@@ -96,8 +104,8 @@ public class SamplePage extends GridPane {
         b4.setStyle("-fx-base: #41a9c9;");
         Button b5 = new Button("Button");
         b5.setStyle("-fx-base: #888;");
-        newSection("Nice Colors:", b1, b2, b3, b4, b5);
-        newSection("Greys:", 0,
+        newSection("Nice Colors:", () -> new Node[]{b1, b2, b3, b4, b5});
+        newSection("Greys:", 0, () -> new Node[]{
                 createGreyButton(0),
                 createGreyButton(0.1),
                 createGreyButton(0.2),
@@ -108,7 +116,7 @@ public class SamplePage extends GridPane {
                 createGreyButton(0.7),
                 createGreyButton(0.8),
                 createGreyButton(0.9),
-                createGreyButton(1));
+                createGreyButton(1)});
         ToggleGroup tg1 = new ToggleGroup();
         ToggleGroup tg2 = new ToggleGroup();
         ToggleGroup tg3 = new ToggleGroup();
@@ -157,11 +165,11 @@ public class SamplePage extends GridPane {
         right4.setToggleGroup(tg4);
         right4.setSelected(true);
 
-        newSection("Pill Toggle\nButtons:",
+        newSection("Pill Toggle\nButtons:", () -> new Node[]{
                 new HBox(left1, center1, right1),
                 new HBox(left2, center2, right2),
                 new HBox(left3, center3, right3),
-                new HBox(left4, center4, right4)
+                new HBox(left4, center4, right4)}
         );
 
         ToggleGroup tg5 = new ToggleGroup();
@@ -248,77 +256,77 @@ public class SamplePage extends GridPane {
         right8.setSelected(true);
         withState(right8, "focused");
 
-        newSection("Pill Toggle\nButtons\nFocused:",
+        newSection("Pill Toggle\nButtons\nFocused:", () -> new Node[]{
                 new HBox(left5, center5, right5),
                 new HBox(left5_1, center5_1, right5_1),
                 new HBox(left5_2, center5_2, right5_2),
                 new HBox(left5_3, center5_3, right5_3),
                 new HBox(left6, center6, right6),
                 new HBox(left7, center7, right7),
-                new HBox(left8, center8, right8)
+                new HBox(left8, center8, right8)}
         );
-        newSection("ToggleButton:",
+        newSection("ToggleButton:", () -> new Node[]{
                 new ToggleButton("Button"),
                 withState(new ToggleButton("Hover"), "hover"),
                 withState(new ToggleButton("Armed"), "armed"),
                 withState(new ToggleButton("Focused"), "focused"),
                 withState(new ToggleButton("Focused & Hover"), "focused, hover"),
                 withState(new ToggleButton("Focused & Armed"), "focused, armed"),
-                withState(new ToggleButton("Disabled"), "disabled"));
-        newSection("ToggleButton Selected:",
+                withState(new ToggleButton("Disabled"), "disabled")});
+        newSection("ToggleButton Selected:", () -> new Node[]{
                 withState(new ToggleButton("Button"), "selected"),
                 withState(new ToggleButton("Hover"), "selected, hover"),
                 withState(new ToggleButton("Armed"), "selected, armed"),
                 withState(new ToggleButton("Focused"), "selected, focused"),
                 withState(new ToggleButton("Focused & Hover"), "selected, focused, hover"),
                 withState(new ToggleButton("Focused & Armed"), "selected, focused, armed"),
-                withState(new ToggleButton("Disabled"), "selected, disabled"));
-        newSection("CheckBox:",
+                withState(new ToggleButton("Disabled"), "selected, disabled")});
+        newSection("CheckBox:", () -> new Node[]{
                 new CheckBox("CheckBox"),
                 withState(new CheckBox("Hover"), "hover"),
                 withState(new CheckBox("Armed"), "armed"),
                 withState(new CheckBox("Focused"), "focused"),
                 withState(new CheckBox("Focused & Hover"), "focused, hover"),
                 withState(new CheckBox("Focused & Armed"), "focused, armed"),
-                withState(new CheckBox("Disabled"), "disabled"));
-        newSection("CheckBox Selected:",
+                withState(new CheckBox("Disabled"), "disabled")});
+        newSection("CheckBox Selected:", () -> new Node[]{
                 withState(new CheckBox("CheckBox"), "selected"),
                 withState(new CheckBox("Hover"), "selected, hover"),
                 withState(new CheckBox("Armed"), "selected, armed"),
                 withState(new CheckBox("Focused"), "selected, focused"),
                 withState(new CheckBox("Focused & Hover"), "selected, focused, hover"),
                 withState(new CheckBox("Focused & Armed"), "selected, focused, armed"),
-                withState(new CheckBox("Disabled"), "selected, disabled"));
+                withState(new CheckBox("Disabled"), "selected, disabled")});
 
         CheckBox checkB = new CheckBox("CheckBox");
         checkB.setSelected(true);
         checkB.setIndeterminate(true);
         checkB.setAllowIndeterminate(true);
-        newSection("CheckBox\nIndeterminate:",
+        newSection("CheckBox\nIndeterminate:", () -> new Node[]{
                 checkB,
                 withState(new CheckBox("Hover"), "indeterminate, selected, hover"),
                 withState(new CheckBox("Armed"), "indeterminate, selected, armed"),
                 withState(new CheckBox("Focused"), "indeterminate, selected, focused"),
                 withState(new CheckBox("Focused & Hover"), "indeterminate, selected, focused, hover"),
                 withState(new CheckBox("Focused & Armed"), "indeterminate, selected, focused, armed"),
-                withState(new CheckBox("Disabled"), "indeterminate, selected, disabled"));
-        newSection("RadioButton:",
+                withState(new CheckBox("Disabled"), "indeterminate, selected, disabled")});
+        newSection("RadioButton:", () -> new Node[]{
                 new RadioButton("RadioButton"),
                 withState(new RadioButton("Hover"), "hover"),
                 withState(new RadioButton("Armed"), "armed"),
                 withState(new RadioButton("Focused"), "focused"),
                 withState(new RadioButton("Focused & Hover"), "focused, hover"),
                 withState(new RadioButton("Focused & Armed"), "focused, armed"),
-                withState(new RadioButton("Disabled"), "disabled"));
-        newSection("RadioButton\nSelected:",
+                withState(new RadioButton("Disabled"), "disabled")});
+        newSection("RadioButton\nSelected:", () -> new Node[]{
                 withState(new RadioButton("RadioButton"), "selected"),
                 withState(new RadioButton("Hover"), "selected, hover"),
                 withState(new RadioButton("Armed"), "selected, armed"),
                 withState(new RadioButton("Focused"), "selected, focused"),
                 withState(new RadioButton("Focused & Hover"), "selected, focused, hover"),
                 withState(new RadioButton("Focused & Armed"), "selected, focused, armed"),
-                withState(new RadioButton("Disabled"), "selected, disabled"));
-        newSection("HyperLink:",
+                withState(new RadioButton("Disabled"), "selected, disabled")});
+        newSection("HyperLink:", () -> new Node[]{
                 new Hyperlink("Hyperlink"),
                 withState(new Hyperlink("Visited"), "visited"),
                 withState(new Hyperlink("Hover"), "hover"),
@@ -327,7 +335,7 @@ public class SamplePage extends GridPane {
                 withState(new Hyperlink("F & Visited"), "focused, visited"),
                 withState(new Hyperlink("F & Hover"), "focused, hover"),
                 withState(new Hyperlink("F & Armed"), "focused, armed"),
-                withState(new Hyperlink("Disabled"), "disabled"));
+                withState(new Hyperlink("Disabled"), "disabled")});
         ObservableList<String> choiceBoxLongList = sampleItems(200);
         choiceBoxLongList.add(100, "Long List");
         ChoiceBox<String> cb1 = new ChoiceBox<String>(sampleItems());
@@ -344,11 +352,11 @@ public class SamplePage extends GridPane {
         cb6.setValue("Item C");
         cb6.setDisable(true);
         newSection(
-                "ChoiceBox:", cb1, cb2,
-                withState(cb3, "hover"),
-                withState(cb4, "showing"),
-                withState(cb5, "focused"),
-                cb6);
+                "ChoiceBox:", () -> new Node[]{cb1, cb2,
+                        withState(cb3, "hover"),
+                        withState(cb4, "showing"),
+                        withState(cb5, "focused"),
+                        cb6});
         ChoiceBox<String> c1 = new ChoiceBox<String>(sampleItems());
         c1.setValue("Item A");
         ChoiceBox<String> c2 = new ChoiceBox<String>(choiceBoxLongList);
@@ -363,11 +371,11 @@ public class SamplePage extends GridPane {
         c6.setValue("Item C");
         c6.setDisable(true);
         newSection(
-                "ChoiceBox:", c1, c2,
-                withState(c3, "hover"),
-                withState(c4, "showing"),
-                withState(c5, "focused"),
-                c6);
+                "ChoiceBox:", () -> new Node[]{c1, c2,
+                        withState(c3, "hover"),
+                        withState(c4, "showing"),
+                        withState(c5, "focused"),
+                        c6});
         ComboBox<String> com1 = new ComboBox<String>(sampleItems());
         com1.setValue("Item A");
         com1.setEditable(true);
@@ -378,9 +386,9 @@ public class SamplePage extends GridPane {
         com3.setValue("Item B");
         com3.setEditable(true);
         newSection(
-                "ComboBox\nEditable:", com1,
-                withState(com2, "editable", ".arrow-button", "hover"),
-                withState(com3, "editable", ".arrow-button", "pressed"));
+                "ComboBox\nEditable:", () -> new Node[]{com1,
+                        withState(com2, "editable", ".arrow-button", "hover"),
+                        withState(com3, "editable", ".arrow-button", "pressed")});
         ComboBox<String> co1 = new ComboBox<String>(sampleItems());
         co1.setValue("Item B");
         co1.setEditable(true);
@@ -389,9 +397,9 @@ public class SamplePage extends GridPane {
         co2.setEditable(true);
         co2.setDisable(true);
         newSection(
-                "ComboBox\nEditable\n(More):",
-                withState(co1, "editable,contains-focus", ".text-field", "focused"),
-                co2);
+                "ComboBox\nEditable\n(More):", () -> new Node[]{
+                        withState(co1, "editable,contains-focus", ".text-field", "focused"),
+                        co2});
         String[] spinnerStyles = new String[]{
                 "default",
                 Spinner.STYLE_CLASS_ARROWS_ON_RIGHT_HORIZONTAL,
@@ -409,15 +417,15 @@ public class SamplePage extends GridPane {
             }
             spinners[2].setDisable(true);
             newSection(
-                    "Spinner (" + style + "):",
-                    spinners[0],
-                    withState(spinners[1], "focused"),
-                    spinners[2]
+                    "Spinner (" + style + "):", () -> new Node[]{
+                            spinners[0],
+                            withState(spinners[1], "focused"),
+                            spinners[2]}
             );
         }
-        newSection("Color Picker:", new ColorPicker(Color.RED), withState(new ColorPicker(Color.RED), "hover"),
+        newSection("Color Picker:", () -> new Node[]{new ColorPicker(Color.RED), withState(new ColorPicker(Color.RED), "hover"),
                 withState(new ColorPicker(Color.RED), "showing"), withState(new ColorPicker(Color.RED), "focused"),
-                withState(new ColorPicker(Color.RED), "disabled"));
+                withState(new ColorPicker(Color.RED), "disabled")});
         ColorPicker cp1 = new ColorPicker(Color.RED);
         cp1.getStyleClass().add(ColorPicker.STYLE_CLASS_SPLIT_BUTTON);
         ColorPicker cp2 = new ColorPicker(Color.RED);
@@ -429,11 +437,11 @@ public class SamplePage extends GridPane {
         ColorPicker cp5 = new ColorPicker(Color.RED);
         cp5.getStyleClass().add(ColorPicker.STYLE_CLASS_SPLIT_BUTTON);
         newSection(
-                "Color Picker\n Split Button:", cp1,
-                withState(cp2, "hover"),
-                withState(cp3, "showing"),
-                withState(cp4, "focused"),
-                withState(cp5, "disabled"));
+                "Color Picker\n Split Button:", () -> new Node[]{cp1,
+                        withState(cp2, "hover"),
+                        withState(cp3, "showing"),
+                        withState(cp4, "focused"),
+                        withState(cp5, "disabled")});
         MenuButton mb1 = new MenuButton();
         mb1.getItems().addAll(createMenuItems(20));
         mb1.setText("right");
@@ -453,11 +461,11 @@ public class SamplePage extends GridPane {
         MenuButton mb6 = new MenuButton();
         mb6.getItems().addAll(createMenuItems(20));
         mb6.setText("disabled");
-        newSection("MenuButton:", mb1, mb2,
+        newSection("MenuButton:", () -> new Node[]{mb1, mb2,
                 withState(mb3, "openvertically, hover"),
                 withState(mb4, "openvertically, armed"),
                 withState(mb5, "openvertically, focused"),
-                withState(mb6, "openvertically, disabled"));
+                withState(mb6, "openvertically, disabled")});
         SplitMenuButton splitmb1 = new SplitMenuButton(createMenuItems(20));
         splitmb1.setText("right");
         splitmb1.setPopupSide(Side.RIGHT);
@@ -468,9 +476,9 @@ public class SamplePage extends GridPane {
         SplitMenuButton splitmb4 = new SplitMenuButton(createMenuItems(20));
         splitmb4.setText("armed");
         newSection(
-                "SplitMenuButton:", splitmb1, splitmb2,
-                withState(splitmb3, "openvertically", ".label", "hover"),
-                withState(splitmb4, "armed,openvertically", ".label", "armed"));
+                "SplitMenuButton:", () -> new Node[]{splitmb1, splitmb2,
+                        withState(splitmb3, "openvertically", ".label", "hover"),
+                        withState(splitmb4, "armed,openvertically", ".label", "armed")});
         SplitMenuButton splitmb_m1 = new SplitMenuButton(createMenuItems(20));
         splitmb_m1.setText("arrow hover");
         SplitMenuButton splitmb_m2 = new SplitMenuButton(createMenuItems(20));
@@ -480,18 +488,18 @@ public class SamplePage extends GridPane {
         SplitMenuButton splitmb_m4 = new SplitMenuButton(createMenuItems(20));
         splitmb_m4.setText("disabled");
         newSection(
-                "SplitMenuButton\nnMore:",
-                withState(splitmb_m1, "openvertically", ".arrow-button", "hover"),
-                withState(splitmb_m2, "openvertically,showing"),
-                withState(splitmb_m3, "openvertically,focused"),
-                withState(splitmb_m4, "openvertically,disabled"));
+                "SplitMenuButton\nnMore:", () -> new Node[]{
+                        withState(splitmb_m1, "openvertically", ".arrow-button", "hover"),
+                        withState(splitmb_m2, "openvertically,showing"),
+                        withState(splitmb_m3, "openvertically,focused"),
+                        withState(splitmb_m4, "openvertically,disabled")});
         newSection(
-                "DatePicker:",
-                new DatePicker(),
-                withState(new DatePicker(), "hover"),
-                withState(new DatePicker(), "showing"),
-                withState(new DatePicker(), "focused"),
-                withState(new DatePicker(), "disabled"));
+                "DatePicker:", () -> new Node[]{
+                        new DatePicker(),
+                        withState(new DatePicker(), "hover"),
+                        withState(new DatePicker(), "showing"),
+                        withState(new DatePicker(), "focused"),
+                        withState(new DatePicker(), "disabled")});
         Slider s1 = new Slider(0, 100, 50);
         s1.setMaxWidth(90);
         Slider s2 = new Slider(0, 100, 50);
@@ -504,17 +512,17 @@ public class SamplePage extends GridPane {
         s5.setShowTickLabels(true);
         s5.setShowTickMarks(true);
         newDetailedSection(
-                new String[]{"Slider (H):", "normal", "hover", "pressed", "disabled", "tickmarks"},
-                withState(s1, null),
-                withState(s2, null, ".thumb", "hover"),
-                withState(s3, null, ".thumb", "hover, pressed"),
-                withState(s4, "disabled"),
-                s5);
+                new String[]{"Slider (H):", "normal", "hover", "pressed", "disabled", "tickmarks"}, () -> new Node[]{
+                        withState(s1, null),
+                        withState(s2, null, ".thumb", "hover"),
+                        withState(s3, null, ".thumb", "hover, pressed"),
+                        withState(s4, "disabled"),
+                        s5});
         newDetailedSection(
-                new String[]{"Slider (H) Focused:", "normal", "hover", "pressed"},
-                withState(new Slider(0, 100, 50), "focused"),
-                withState(new Slider(0, 100, 50), "focused", ".thumb", "hover"),
-                withState(new Slider(0, 100, 50), "focused", ".thumb", "hover, pressed"));
+                new String[]{"Slider (H) Focused:", "normal", "hover", "pressed"}, () -> new Node[]{
+                        withState(new Slider(0, 100, 50), "focused"),
+                        withState(new Slider(0, 100, 50), "focused", ".thumb", "hover"),
+                        withState(new Slider(0, 100, 50), "focused", ".thumb", "hover, pressed")});
         Slider s_v1 = new Slider(0, 100, 50);
         s_v1.setOrientation(Orientation.VERTICAL);
         Slider s_v2 = new Slider(0, 100, 50);
@@ -527,12 +535,12 @@ public class SamplePage extends GridPane {
         s_v5.setOrientation(Orientation.VERTICAL);
         s_v5.setShowTickLabels(true);
         s_v5.setShowTickMarks(true);
-        newSection("Slider - V:",
+        newSection("Slider - V:", () -> new Node[]{
                 s_v1,
                 withState(s_v2, null, ".thumb", "hover"),
                 withState(s_v3, null, ".thumb", "hover, pressed"),
                 withState(s_v4, "disabled"),
-                s_v5);
+                s_v5});
         ScrollBar sb1 = new ScrollBar();
         sb1.setMinWidth(30);
         sb1.setPrefWidth(30);
@@ -540,9 +548,9 @@ public class SamplePage extends GridPane {
         sb2.setVisibleAmount(60);
         sb1.setMax(100);
         newDetailedSection(
-                new String[]{"Scrollbar - H: ", "normal", "focused", "small", "big thumb"},
-                new ScrollBar(),
-                withState(new ScrollBar(), "focused"), sb1, sb2);
+                new String[]{"Scrollbar - H: ", "normal", "focused", "small", "big thumb"}, () -> new Node[]{
+                        new ScrollBar(),
+                        withState(new ScrollBar(), "focused"), sb1, sb2});
         ScrollBar sb3 = new ScrollBar();
         sb3.setOrientation(Orientation.VERTICAL);
         ScrollBar sb4 = new ScrollBar();
@@ -561,13 +569,13 @@ public class SamplePage extends GridPane {
         sb9.setOrientation(Orientation.VERTICAL);
         newDetailedSection(
                 new String[]{"Scrollbar - V: ", "normal", "focused", "small", "btn hover", "btn pressed", ".thumb hover", ".thumb pressed"},
-                withState(sb3, "vertical"),
-                withState(sb4, "focused"),
-                withState(sb5, "vertical"),
-                withState(sb6, "vertical", ".decrement-button", "hover"),
-                withState(sb7, "vertical", ".decrement-button", "pressed"),
-                withState(sb8, "vertical", ".thumb", "hover"),
-                withState(sb9, "vertical", ".thumb", "pressed")
+                () -> new Node[]{withState(sb3, "vertical"),
+                        withState(sb4, "focused"),
+                        withState(sb5, "vertical"),
+                        withState(sb6, "vertical", ".decrement-button", "hover"),
+                        withState(sb7, "vertical", ".decrement-button", "pressed"),
+                        withState(sb8, "vertical", ".thumb", "hover"),
+                        withState(sb9, "vertical", ".thumb", "pressed")}
         );
         ScrollPane scrollPane = new ScrollPane(scrollPaneContent());
         scrollPane.setMinWidth(40);
@@ -575,27 +583,27 @@ public class SamplePage extends GridPane {
         scrollPane.setMinHeight(40);
         scrollPane.setPrefHeight(40);
         newDetailedSection(
-                new String[]{"ScrollPane: ", "normal", "small", "focused", "empty"},
-                new ScrollPane(scrollPaneContent()),
-                scrollPane,
-                withState(new ScrollPane(scrollPaneContent()), "focused"),
-                new ScrollPane()
+                new String[]{"ScrollPane: ", "normal", "small", "focused", "empty"}, () -> new Node[]{
+                        new ScrollPane(scrollPaneContent()),
+                        scrollPane,
+                        withState(new ScrollPane(scrollPaneContent()), "focused"),
+                        new ScrollPane()}
         );
         ScrollPane scrollPaneVbar = new ScrollPane(scrollPaneContent());
         scrollPaneVbar.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         ScrollPane scrollPaneHbar = new ScrollPane(scrollPaneContent());
         scrollPaneHbar.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         newDetailedSection(
-                new String[]{"ScrollPane H/V: ", "H Bar", "V bar"},
-                scrollPaneVbar,
-                scrollPaneHbar);
+                new String[]{"ScrollPane H/V: ", "H Bar", "V bar"}, () -> new Node[]{
+                        scrollPaneVbar,
+                        scrollPaneHbar});
         Separator sep1 = new Separator();
         sep1.setPrefWidth(100);
         Separator sep2 = new Separator(Orientation.VERTICAL);
         sep2.setPrefHeight(50);
         newDetailedSection(
-                new String[]{"Separator: ", "horizontal", "vertical"},
-                sep1, sep2);
+                new String[]{"Separator: ", "horizontal", "vertical"}, () -> new Node[]{
+                        sep1, sep2});
         ProgressBar pb1 = new ProgressBar(0.6);
         pb1.setPrefWidth(200);
         ProgressBar pb2 = new ProgressBar(0.2);
@@ -603,16 +611,16 @@ public class SamplePage extends GridPane {
         ProgressBar pb3 = new ProgressBar(-1);
         pb3.setPrefWidth(200);
         newDetailedSection(
-                new String[]{"ProgressBar: ", "normal", "disabled", "indeterminate"},
-                pb1,
-                withState(pb2, "disabled"),
-                pb3);
+                new String[]{"ProgressBar: ", "normal", "disabled", "indeterminate"}, () -> new Node[]{
+                        pb1,
+                        withState(pb2, "disabled"),
+                        pb3});
         newDetailedSection(
-                new String[]{"ProgressIndicator: ", "normal 0%", "normal 60%", "normal 100%", "disabled"},
-                new ProgressIndicator(0),
-                new ProgressIndicator(0.6),
-                new ProgressIndicator(1),
-                withState(new ProgressIndicator(0.5), "disabled"));
+                new String[]{"ProgressIndicator: ", "normal 0%", "normal 60%", "normal 100%", "disabled"}, () -> new Node[]{
+                        new ProgressIndicator(0),
+                        new ProgressIndicator(0.6),
+                        new ProgressIndicator(1),
+                        withState(new ProgressIndicator(0.5), "disabled")});
         ProgressIndicator pi1 = new ProgressIndicator(-1);
         pi1.setMaxWidth(USE_PREF_SIZE);
         pi1.setMaxHeight(USE_PREF_SIZE);
@@ -628,15 +636,15 @@ public class SamplePage extends GridPane {
         pi4.setDisable(true);
         newDetailedSection(
                 new String[]{"ProgressIndicator\nIndeterminate: ", "normal", "small", "large", "disabled"},
-                pi1, pi2, pi3, pi4);
+                () -> new Node[]{pi1, pi2, pi3, pi4});
         TextField textF = new TextField();
         textF.setPromptText("Prompt Text");
         newSection(
-                "TextField:",
-                new TextField("TextField"),
-                textF,
-                withState(new TextField("Focused"), "focused"),
-                withState(new TextField("Disabled"), "disabled"));
+                "TextField:", () -> new Node[]{
+                        new TextField("TextField"),
+                        textF,
+                        withState(new TextField("Focused"), "focused"),
+                        withState(new TextField("Disabled"), "disabled")});
         PasswordField pField1 = new PasswordField();
         pField1.setText("Password");
         PasswordField pField2 = new PasswordField();
@@ -646,11 +654,11 @@ public class SamplePage extends GridPane {
         PasswordField pField4 = new PasswordField();
         pField4.setText("Password");
         newSection(
-                "PasswordField:",
-                pField1,
-                pField2,
-                withState(pField3, "focused"),
-                withState(pField4, "disabled"));
+                "PasswordField:", () -> new Node[]{
+                        pField1,
+                        pField2,
+                        withState(pField3, "focused"),
+                        withState(pField4, "disabled")});
         TextArea tArea1 = new TextArea("TextArea");
         tArea1.setPrefColumnCount(10);
         tArea1.setPrefRowCount(2);
@@ -671,195 +679,223 @@ public class SamplePage extends GridPane {
         tArea6.setPrefColumnCount(8);
         tArea6.setPrefRowCount(2);
         newSection(
-                "TextArea:",
-                tArea1, tArea2, tArea3, tArea4,
-                withState(tArea5, "focused"),
-                withState(tArea6, "disabled"));
+                "TextArea:", () -> new Node[]{
+                        tArea1, tArea2, tArea3, tArea4,
+                        withState(tArea5, "focused"),
+                        withState(tArea6, "disabled")});
 
         if (!Boolean.getBoolean("jpro")) {
             newSection(
-                    "HTMLEditor:",
-                    new HTMLEditor() {{
-                        setHtmlText("Hello <b>Bold</b> Text");
-                        setPrefSize(650, 120);
-                    }});
+                    "HTMLEditor:", () -> new Node[]{
+                            new HTMLEditor() {{
+                                setHtmlText("Hello <b>Bold</b> Text");
+                                setPrefSize(650, 120);
+                            }}});
             newSection(
-                    "HTMLEditor\nFocused:",
-                    withState(new HTMLEditor() {{
-                        setHtmlText("<i>Focused</i>");
-                        setPrefSize(650, 120);
-                    }}, "focused")
+                    "HTMLEditor\nFocused:", () -> new Node[]{
+                            withState(new HTMLEditor() {{
+                                setHtmlText("<i>Focused</i>");
+                                setPrefSize(650, 120);
+                            }}, "focused")}
             );
         }
 
         newDetailedSection(
                 new String[]{"ToolBar (H|TOP):", "normal", "overflow", "disabled"},
-                createToolBar(Side.TOP, false, false),
-                createToolBar(Side.TOP, true, false),
-                createToolBar(Side.TOP, false, true)
+                () -> new Node[]{
+                        createToolBar(Side.TOP, false, false),
+                        createToolBar(Side.TOP, true, false),
+                        createToolBar(Side.TOP, false, true)
+                }
         );
         newDetailedSection(
                 new String[]{"ToolBar (H|BOTTOM):", "normal", "overflow", "disabled"},
-                createToolBar(Side.BOTTOM, false, false),
-                createToolBar(Side.BOTTOM, true, false),
-                createToolBar(Side.BOTTOM, false, true)
+                () -> new Node[]{
+                        createToolBar(Side.BOTTOM, false, false),
+                        createToolBar(Side.BOTTOM, true, false),
+                        createToolBar(Side.BOTTOM, false, true)
+                }
         );
         newDetailedSection(
                 new String[]{"ToolBar (V|LEFT):", "normal", "overflow", "disabled"},
-                createToolBar(Side.LEFT, false, false),
-                createToolBar(Side.LEFT, true, false),
-                createToolBar(Side.LEFT, false, true)
+                () -> new Node[]{
+                        createToolBar(Side.LEFT, false, false),
+                        createToolBar(Side.LEFT, true, false),
+                        createToolBar(Side.LEFT, false, true)
+                }
         );
         newDetailedSection(
                 new String[]{"ToolBar (V|RIGHT):", "normal", "overflow", "disabled"},
-                createToolBar(Side.RIGHT, false, false),
-                createToolBar(Side.RIGHT, true, false),
-                createToolBar(Side.RIGHT, false, true)
+                () -> new Node[]{
+                        createToolBar(Side.RIGHT, false, false),
+                        createToolBar(Side.RIGHT, true, false),
+                        createToolBar(Side.RIGHT, false, true)
+                }
         );
         newSection(
                 "Tabs\n(Top):",
-                wrapBdr(createTabPane(4, 250, 100, null, false, false, Side.TOP)),
-                wrapBdr(withState(createTabPane(5, 200, 100, "Tab Disabled &\nMany Tabs", false, true, Side.TOP), null, ".tab", "disabled")),
-                wrapBdr(withState(createTabPane(5, 200, 100, "Disabled", false, false, Side.TOP), "disabled"))
+                () -> new Node[]{
+                        wrapBdr(createTabPane(4, 250, 100, null, false, false, Side.TOP)),
+                        wrapBdr(withState(createTabPane(5, 200, 100, "Tab Disabled &\nMany Tabs", false, true, Side.TOP), null, ".tab", "disabled")),
+                        wrapBdr(withState(createTabPane(5, 200, 100, "Disabled", false, false, Side.TOP), "disabled"))
+                }
         );
         newSection(
                 "Tabs Floating\n(Top):",
-                createTabPane(4, 250, 100, null, true, false, Side.TOP),
-                withState(createTabPane(5, 200, 100, "Tab Disabled &\nMany Tabs", true, true, Side.TOP), null, ".tab", "disabled"),
-                withState(createTabPane(5, 200, 100, "Disabled", true, false, Side.TOP), "disabled")
+                () -> new Node[]{
+                        createTabPane(4, 250, 100, null, true, false, Side.TOP),
+                        withState(createTabPane(5, 200, 100, "Tab Disabled &\nMany Tabs", true, true, Side.TOP), null, ".tab", "disabled"),
+                        withState(createTabPane(5, 200, 100, "Disabled", true, false, Side.TOP), "disabled")
+                }
         );
         newSection(
                 "Tabs\n(Bottom):",
-                wrapBdr(createTabPane(4, 250, 100, null, false, false, Side.BOTTOM)),
-                wrapBdr(withState(createTabPane(5, 200, 100, "Tab Disabled &\nMany Tabs", false, true, Side.BOTTOM), null, ".tab", "disabled")),
-                wrapBdr(withState(createTabPane(5, 200, 100, "Disabled", false, false, Side.BOTTOM), "disabled"))
+                () -> new Node[]{
+                        wrapBdr(createTabPane(4, 250, 100, null, false, false, Side.BOTTOM)),
+                        wrapBdr(withState(createTabPane(5, 200, 100, "Tab Disabled &\nMany Tabs", false, true, Side.BOTTOM), null, ".tab", "disabled")),
+                        wrapBdr(withState(createTabPane(5, 200, 100, "Disabled", false, false, Side.BOTTOM), "disabled"))
+                }
         );
         newSection(
                 "Tabs Floating\n(Bottom):",
-                createTabPane(4, 250, 100, null, true, false, Side.BOTTOM),
-                withState(createTabPane(5, 200, 100, "Tab Disabled &\nMany Tabs", true, true, Side.BOTTOM), null, ".tab", "disabled"),
-                withState(createTabPane(5, 200, 100, "Disabled", true, false, Side.BOTTOM), "disabled")
+                () -> new Node[]{
+                        createTabPane(4, 250, 100, null, true, false, Side.BOTTOM),
+                        withState(createTabPane(5, 200, 100, "Tab Disabled &\nMany Tabs", true, true, Side.BOTTOM), null, ".tab", "disabled"),
+                        withState(createTabPane(5, 200, 100, "Disabled", true, false, Side.BOTTOM), "disabled")
+                }
         );
         newSection(
                 "Tabs\n(Left):",
-                wrapBdr(createTabPane(4, 250, 250, null, false, false, Side.LEFT)),
-                wrapBdr(withState(createTabPane(5, 200, 250, "Tab Disabled &\nMany Tabs", false, true, Side.LEFT), null, ".tab", "disabled")),
-                wrapBdr(withState(createTabPane(5, 200, 250, "Disabled", false, false, Side.LEFT), "disabled"))
+                () -> new Node[]{
+                        wrapBdr(createTabPane(4, 250, 250, null, false, false, Side.LEFT)),
+                        wrapBdr(withState(createTabPane(5, 200, 250, "Tab Disabled &\nMany Tabs", false, true, Side.LEFT), null, ".tab", "disabled")),
+                        wrapBdr(withState(createTabPane(5, 200, 250, "Disabled", false, false, Side.LEFT), "disabled"))
+                }
         );
         newSection(
                 "Tabs Floating\n(Left):",
-                createTabPane(4, 250, 250, null, true, false, Side.LEFT),
-                withState(createTabPane(5, 200, 250, "Tab Disabled &\nMany Tabs", true, true, Side.LEFT), null, ".tab", "disabled"),
-                withState(createTabPane(5, 200, 250, "Disabled", true, false, Side.LEFT), "disabled")
+                () -> new Node[]{
+                        createTabPane(4, 250, 250, null, true, false, Side.LEFT),
+                        withState(createTabPane(5, 200, 250, "Tab Disabled &\nMany Tabs", true, true, Side.LEFT), null, ".tab", "disabled"),
+                        withState(createTabPane(5, 200, 250, "Disabled", true, false, Side.LEFT), "disabled")
+                }
         );
         newSection(
                 "Tabs\n(Right):",
-                wrapBdr(createTabPane(4, 250, 250, null, false, false, Side.RIGHT)),
-                wrapBdr(withState(createTabPane(5, 200, 250, "Tab Disabled &\nMany Tabs", false, true, Side.RIGHT), null, ".tab", "disabled")),
-                wrapBdr(withState(createTabPane(5, 200, 250, "Disabled", false, false, Side.RIGHT), "disabled"))
+                () -> new Node[]{
+                        wrapBdr(createTabPane(4, 250, 250, null, false, false, Side.RIGHT)),
+                        wrapBdr(withState(createTabPane(5, 200, 250, "Tab Disabled &\nMany Tabs", false, true, Side.RIGHT), null, ".tab", "disabled")),
+                        wrapBdr(withState(createTabPane(5, 200, 250, "Disabled", false, false, Side.RIGHT), "disabled"))
+                }
         );
         newSection(
                 "Tabs Floating\n(Right):",
-                createTabPane(4, 250, 250, null, true, false, Side.RIGHT),
-                withState(createTabPane(5, 200, 250, "Tab Disabled &\nMany Tabs", true, true, Side.RIGHT), null, ".tab", "disabled"),
-                withState(createTabPane(5, 200, 250, "Disabled", true, false, Side.RIGHT), "disabled")
+                () -> new Node[]{
+                        createTabPane(4, 250, 250, null, true, false, Side.RIGHT),
+                        withState(createTabPane(5, 200, 250, "Tab Disabled &\nMany Tabs", true, true, Side.RIGHT), null, ".tab", "disabled"),
+                        withState(createTabPane(5, 200, 250, "Disabled", true, false, Side.RIGHT), "disabled")
+                }
         );
         TitledPane tPane = new TitledPane("Not Collapsible", new Label("Content\nLine2."));
         tPane.setCollapsible(false);
         newDetailedSection(
                 new String[]{"TitledPane:", "normal", "not collapsible", "hover", "focused", "disabled"},
-                new TitledPane("Title", new Label("Content\nLine2.")),
-                tPane,
-                withState(new TitledPane("Title", new Label("Content\nLine2.")), "hover"),
-                withState(new TitledPane("Title", new Label("Content\nLine2.")), "focused"),
-                withState(new TitledPane("Title", new Label("Content\nLine2.")), "disabled")
+                () -> new Node[]{
+                        new TitledPane("Title", new Label("Content\nLine2.")),
+                        tPane,
+                        withState(new TitledPane("Title", new Label("Content\nLine2.")), "hover"),
+                        withState(new TitledPane("Title", new Label("Content\nLine2.")), "focused"),
+                        withState(new TitledPane("Title", new Label("Content\nLine2.")), "disabled")
+                }
         );
         newDetailedSection(
                 new String[]{"Accordion:", "normal", "hover", "focused", "disabled"},
-                createAccordion(),
-                withState(createAccordion(), null, ".titled-pane", "hover"),
-                withState(createAccordion(), null, ".titled-pane", "focused"),
-                withState(createAccordion(), "disabled")
+                () -> new Node[]{
+                        createAccordion(),
+                        withState(createAccordion(), null, ".titled-pane", "hover"),
+                        withState(createAccordion(), null, ".titled-pane", "focused"),
+                        withState(createAccordion(), "disabled")
+                }
         );
         newDetailedSection(
-                new String[]{"SplitPane (H):", "simple", "many", "complex"},
-                createSplitPane(2, false, null),
-                createSplitPane(4, false, null),
-                createSplitPane(2, false, createSplitPane(2, true, null))
+                new String[]{"SplitPane (H):", "simple", "many", "complex"}, () -> new Node[]{
+                        createSplitPane(2, false, null),
+                        createSplitPane(4, false, null),
+                        createSplitPane(2, false, createSplitPane(2, true, null))}
         );
         newDetailedSection(
-                new String[]{"SplitPane (V):", "simple", "many", "complex"},
-                createSplitPane(2, true, null),
-                createSplitPane(4, true, null),
-                createSplitPane(2, true, createSplitPane(2, false, null))
+                new String[]{"SplitPane (V):", "simple", "many", "complex"}, () -> new Node[]{
+                        createSplitPane(2, true, null),
+                        createSplitPane(4, true, null),
+                        createSplitPane(2, true, createSplitPane(2, false, null))}
         );
         newDetailedSection(
-                new String[]{"Pagination:", "simple", "infinate"},
-                createPagination(5, false, true),
-                createPagination(Integer.MAX_VALUE, false, true)
+                new String[]{"Pagination:", "simple", "infinate"}, () -> new Node[]{
+                        createPagination(5, false, true),
+                        createPagination(Integer.MAX_VALUE, false, true)}
         );
         newDetailedSection(
-                new String[]{"Pagination\nBullet Style:", "simple", "infinate"},
-                createPagination(5, true, true),
-                createPagination(Integer.MAX_VALUE, true, true)
+                new String[]{"Pagination\nBullet Style:", "simple", "infinate"}, () -> new Node[]{
+                        createPagination(5, true, true),
+                        createPagination(Integer.MAX_VALUE, true, true)}
         );
         newSection(
-                "Pagination\nNo Arrows:",
-                createPagination(Integer.MAX_VALUE, false, false)
+                "Pagination\nNo Arrows:", () -> new Node[]{
+                        createPagination(Integer.MAX_VALUE, false, false)}
         );
         newDetailedSection(
-                new String[]{"ListView\n2 items\nsingle selection:", "normal", "focused", "disabled"},
-                createListView(3, false, false, false),
-                withState(createListView(3, false, false, false), "focused"),
-                createListView(3, false, true, false)
+                new String[]{"ListView\n2 items\nsingle selection:", "normal", "focused", "disabled"}, () -> new Node[]{
+                        createListView(3, false, false, false),
+                        withState(createListView(3, false, false, false), "focused"),
+                        createListView(3, false, true, false)}
         );
         newDetailedSection(
-                new String[]{"ListView\n10,000 items\nmultiple selection:", "normal", "focused", "disabled"},
-                createListView(10000, true, false, false),
-                withState(createListView(10000, true, false, false), "focused"),
-                createListView(10000, true, true, false)
+                new String[]{"ListView\n10,000 items\nmultiple selection:", "normal", "focused", "disabled"}, () -> new Node[]{
+                        createListView(10000, true, false, false),
+                        withState(createListView(10000, true, false, false), "focused"),
+                        createListView(10000, true, true, false)}
         );
         newDetailedSection(
-                new String[]{"ListView (H)\n10,000 items\nmultiple selection:", "normal", "focused", "disabled"},
-                createListView(10000, true, false, true),
-                withState(createListView(10000, true, false, true), "focused"),
-                createListView(10000, true, true, true)
+                new String[]{"ListView (H)\n10,000 items\nmultiple selection:", "normal", "focused", "disabled"}, () -> new Node[]{
+                        createListView(10000, true, false, true),
+                        withState(createListView(10000, true, false, true), "focused"),
+                        createListView(10000, true, true, true)}
         );
         newSection(
-                "TableView Simple:\n(Row Selection)",
-                createTableViewSimple(550, true, false),
-                withState(createTableViewSimple(150, true, false), "focused")
+                "TableView Simple:\n(Row Selection)", () -> new Node[]{
+                        createTableViewSimple(550, true, false),
+                        withState(createTableViewSimple(150, true, false), "focused")}
         );
         newSection(
-                "TableView Simple:\n(Constrained Resize)",
-                createTableViewSimple(550, true, true),
-                withState(createTableViewSimple(150, true, true), "focused")
+                "TableView Simple:\n(Constrained Resize)", () -> new Node[]{
+                        createTableViewSimple(550, true, true),
+                        withState(createTableViewSimple(150, true, true), "focused")}
         );
         newSection(
-                "TableView:\n(Row Selection)",
-                createTableView(550, true),
-                withState(createTableView(150, true), "focused")
+                "TableView:\n(Row Selection)", () -> new Node[]{
+                        createTableView(550, true),
+                        withState(createTableView(150, true), "focused")}
         );
         newSection(
-                "TableView:\n(Cell Selection)",
-                createTableView(550, false),
-                withState(createTableView(150, false), "focused")
+                "TableView:\n(Cell Selection)", () -> new Node[]{
+                        createTableView(550, false),
+                        withState(createTableView(150, false), "focused")}
         );
         newSection(
-                "TreeView:",
-                createTreeView(350),
-                withState(createTreeView(350), "focused")
+                "TreeView:", () -> new Node[]{
+                        createTreeView(350),
+                        withState(createTreeView(350), "focused")}
         );
         newSection(
                 "TreeTableView:\n" +
-                        "(Row Selection)",
-                createTreeTableView(550, false),
-                withState(createTreeTableView(200, false), "focused")
+                        "(Row Selection)", () -> new Node[]{
+                        createTreeTableView(550, false),
+                        withState(createTreeTableView(200, false), "focused")}
         );
         newSection(
-                "TreeTableView:\n(Cell Selection)",
-                createTreeTableView(550, true),
-                withState(createTreeTableView(200, true), "focused")
+                "TreeTableView:\n(Cell Selection)", () -> new Node[]{
+                        createTreeTableView(550, true),
+                        withState(createTreeTableView(200, true), "focused")}
         );
         ListView<String> lv = new ListView<>();
         lv.setPrefWidth(150);
@@ -871,11 +907,11 @@ public class SamplePage extends GridPane {
         treev.setPrefWidth(150);
         treev.setPrefHeight(100);
         newDetailedSection(
-                new String[]{"Empty:", "ListView", "TableView", "TreeView", "TreeTableView"},
-                lv, tv, treev,
-                new TreeTableView() {{
-                    setPrefSize(150, 100);
-                }});
+                new String[]{"Empty:", "ListView", "TableView", "TreeView", "TreeTableView"}, () -> new Node[]{
+                        lv, tv, treev,
+                        new TreeTableView() {{
+                            setPrefSize(150, 100);
+                        }}});
         Label label1 = new Label("This is a simple Tooltip.");
         label1.getStyleClass().add("tooltip");
         Label label2 = new Label("This is a simple Tooltip\nwith graphic.", createGraphic());
@@ -893,138 +929,179 @@ public class SamplePage extends GridPane {
         vb.getChildren().addAll(button1, button2, button3);
 
         newDetailedSection(
-                new String[]{"ToolTip:", "inline", "inline + graphic", "popup"},
-                label1, label2, vb);
+                new String[]{"ToolTip:", "inline", "inline + graphic", "popup"}, () -> new Node[]{
+                        label1, label2, vb});
 
         if (!Boolean.getBoolean("jpro")) {
             newSection(
-                    "MenuBar & ContextMenu:",
-                    createMenuBar(),
-                    createContextMenu()
+                    "MenuBar & ContextMenu:", () -> new Node[]{
+//                    createMenuBar(),
+                            createContextMenu()
+                    }
             );
             newSection(
-                    "Menus:",
-                    createInlineMenu(false),
-                    createInlineMenu(true)
+                    "Menus:", () -> new Node[]{
+                            createInlineMenu(false),
+                            createInlineMenu(true)
+                    }
             );
         }
 
         newSection(
-                "AreaChart:",
-                createAreaChart(false)
+                "AreaChart:", () -> new Node[]{
+                        createAreaChart(false)
+                }
         );
         newSection(
-                "StackedAreaChart:",
-                createAreaChart(true)
+                "StackedAreaChart:", () -> new Node[]{
+                        createAreaChart(true)}
         );
         newSection(
-                "BarChart\nSimple:",
-                createBarChart(false, true)
+                "BarChart\nSimple:", () -> new Node[]{
+                        createBarChart(false, true)}
         );
         newSection(
-                "BarChart:",
-                createBarChart(false, false)
+                "BarChart:", () -> new Node[]{
+                        createBarChart(false, false)}
         );
         newSection(
-                "BarChart\n(H, Simple):",
-                createBarChart(true, true)
+                "BarChart\n(H, Simple):", () -> new Node[]{
+                        createBarChart(true, true)}
         );
         newSection(
-                "BarChart\n(H):",
-                createBarChart(true, false)
+                "BarChart\n(H):", () -> new Node[]{
+                        createBarChart(true, false)}
         );
         newSection(
-                "StackedBarChart\nSimple:",
-                createStackedBarChart(false, true)
+                "StackedBarChart\nSimple:", () -> new Node[]{
+                        createStackedBarChart(false, true)}
         );
         newSection(
-                "StackedBarChart\n(H, Simple):",
-                createStackedBarChart(true, true)
+                "StackedBarChart\n(H, Simple):", () -> new Node[]{
+                        createStackedBarChart(true, true)}
         );
         newSection(
-                "BubbleChart:",
-                createBubbleChart(false)
+                "BubbleChart:", () -> new Node[]{
+                        createBubbleChart(false)}
         );
         newSection(
-                "BubbleChart\nTop & Right Axis:",
-                createBubbleChart(true)
+                "BubbleChart\nTop & Right Axis:", () -> new Node[]{
+                        createBubbleChart(true)
+                }
         );
         newSection(
-                "LineChart:",
-                createLineChart()
+                "LineChart:", () -> new Node[]{
+                        createLineChart()
+                }
         );
         newSection(
-                "PieChar:",
-                createPieChart()
+                "PieChar:", () -> new Node[]{
+                        createPieChart()
+                }
         );
         newSection(
-                "ScatterChart:",
-                createScatterChart()
+                "ScatterChart:", () -> new Node[]{
+                        createScatterChart()
+                }
         );
     }
 
-    public List<Section> getSections() {
-        return sections;
+    private void newSection(String name, Supplier<Node[]> childrenSupplier) {
+        newSection(name, 10, childrenSupplier);
     }
 
-    private void newSection(String name, Node... children) {
-        newSection(name, 10, children);
+    private void newSection(String name, int spacing, Supplier<Node[]> childrenSupplier) {
+        Supplier<Node> supplier = () -> {
+            Node[] children = childrenSupplier.get();
+            Label sectionLabel = new Label(name);
+            sectionLabel.getStyleClass().add("section-label");
+            sectionLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+            HBox box = new HBox(spacing);
+            box.getStyleClass().add("section-border");
+            box.getChildren().addAll(children);
+            return box;
+        };
+
+        SectionItem item = new SectionItem();
+        item.name = name;
+        item.content = supplier;
+        sectionItems.add(item);
     }
 
-    private void newSection(String name, int spacing, Node... children) {
-        Label sectionLabel = new Label(name);
-        sectionLabel.getStyleClass().add("section-label");
-        sectionLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        HBox box = new HBox(spacing);
-        box.getStyleClass().add("section-border");
-        box.getChildren().addAll(children);
-        setConstraints(sectionLabel, 0, rowIndex, 1, 1, HPos.CENTER, VPos.CENTER, Priority.ALWAYS, Priority.ALWAYS);
-        setConstraints(box, 1, rowIndex++);
-        getChildren().addAll(sectionLabel, box);
-        sections.add(new Section(name, sectionLabel, box));
-        content.put(name, box);
-    }
+    class SectionItem {
+        String name;
+        Supplier<Node> content;
 
-    private void newDetailedSection(String[] labels, Node... children) {
-        Label sectionLabel = new Label(labels[0]);
-        sectionLabel.getStyleClass().add("section-label");
-        sectionLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        HBox hbox = new HBox(10);
-        for (int n = 0; n < children.length; n++) {
-            VBox vbox = new VBox(10);
-            vbox.getStyleClass().add("section-border");
-            vbox.setAlignment(Pos.CENTER);
-            Label stateLabel = new Label(labels[n + 1]);
-            stateLabel.getStyleClass().add("section-label");
-            vbox.getChildren().add(stateLabel);
-            vbox.getChildren().add(children[n]);
-            hbox.getChildren().addAll(vbox);
+        @Override
+        public String toString() {
+            return name.replace(":", "").replace("\n", " ");
         }
-        setConstraints(sectionLabel, 0, rowIndex, 1, 1, HPos.CENTER, VPos.CENTER, Priority.ALWAYS, Priority.ALWAYS);
-        setConstraints(hbox, 1, rowIndex++);
-        getChildren().addAll(sectionLabel, hbox);
-        sections.add(new Section(labels[0], sectionLabel, hbox));
-        content.put(labels[0], hbox);
+    }
+
+    public ObservableList<SectionItem> getSectionItems() {
+        return sectionItems;
+    }
+
+    static class SectionListCell extends ListCell<SectionItem> {
+
+        private static Map<SectionItem, Node> cache = new HashMap<>();
+
+        private Label nameLabel = new Label();
+        private HBox box = new HBox();
+
+        public SectionListCell() {
+            getStyleClass().add("section-list-cell");
+            nameLabel.getStyleClass().add("name-label");
+            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            setGraphic(box);
+            box.setAlignment(Pos.CENTER_LEFT);
+            box.visibleProperty().bind(emptyProperty().not());
+        }
+
+        @Override
+        protected void updateItem(SectionItem item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if (!empty && item != null) {
+                nameLabel.setText(item.name);
+                Node node = cache.computeIfAbsent(item, key -> {
+                    Node node1 = item.content.get();
+                    HBox.setHgrow(node1, Priority.ALWAYS);
+                    return node1;
+                });
+                box.getChildren().setAll(nameLabel, node);
+            }
+        }
+    }
+
+    private void newDetailedSection(String[] labels, Supplier<Node[]> childrenSupplier) {
+        Supplier<Node> supplier = () -> {
+            Node[] children = childrenSupplier.get();
+            Label sectionLabel = new Label(labels[0]);
+            sectionLabel.getStyleClass().add("section-label");
+            sectionLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            HBox hbox = new HBox(10);
+            for (int n = 0; n < children.length; n++) {
+                VBox vbox = new VBox(10);
+                vbox.getStyleClass().add("section-border");
+                vbox.setAlignment(Pos.CENTER);
+                Label stateLabel = new Label(labels[n + 1]);
+                stateLabel.getStyleClass().add("section-label");
+                vbox.getChildren().add(stateLabel);
+                vbox.getChildren().add(children[n]);
+                hbox.getChildren().addAll(vbox);
+            }
+            return hbox;
+        };
+
+        SectionItem item = new SectionItem();
+        item.name = labels[0];
+        item.content = supplier;
+        sectionItems.add(item);
     }
 
     public Map<String, Node> getContent() {
         return content;
-    }
-
-    public static class Section {
-        public final String name;
-        public final Label label;
-        public final Node box;
-
-        public Section(String name, Label label, Node box) {
-            this.name = name;
-            this.label = label;
-            this.box = box;
-        }
-
-        @Override
-        public String toString() {
-            return name.replaceAll("\n", " ");
-        }
     }
 }
