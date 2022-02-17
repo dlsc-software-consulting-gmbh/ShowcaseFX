@@ -227,18 +227,18 @@ public class SamplePageHelpers {
         return items.toArray(new MenuItem[items.size()]);
     }
 
-//    static MenuBar createMenuBar() {
-//        MenuBar mb = new MenuBar();
-//        mb.setUseSystemMenuBar(false);
-//        mb.getMenus().addAll(
-//                createMenu("File"),
-//                createMenu("Edit"),
-//                createMenu("View"),
-//                createMenu("Help")
-//        );
-//        Platform.runLater(() -> new ArrayList<>(mb.lookupAll(".menu")).get(1).pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), true));
-//        return mb;
-//    }
+    static MenuBar createMenuBar() {
+        MenuBar mb = new MenuBar();
+        mb.setUseSystemMenuBar(false);
+        mb.getMenus().addAll(
+                createMenu("File"),
+                createMenu("Edit"),
+                createMenu("View"),
+                createMenu("Help")
+        );
+        Platform.runLater(() -> new ArrayList<>(mb.lookupAll(".menu")).get(1).pseudoClassStateChanged(PseudoClass.getPseudoClass("hover"), true));
+        return mb;
+    }
 
     static Menu createMenu(String name) {
         Menu m = new Menu(name);
