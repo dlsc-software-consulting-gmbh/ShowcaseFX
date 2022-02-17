@@ -66,6 +66,14 @@ public class SamplePage extends ListView<SamplePage.SectionItem> {
         setItems(sectionItems);
         setCellFactory(view -> new SectionListCell());
 
+        newSection("Dialogs:", () -> new Node[]{
+                createAlertButton("Confirmation", Alert.AlertType.CONFIRMATION),
+                createAlertButton("Error", Alert.AlertType.ERROR),
+                createAlertButton("Information", Alert.AlertType.INFORMATION),
+                createAlertButton("Warning", Alert.AlertType.WARNING),
+                createAlertButton("None", Alert.AlertType.NONE)
+        });
+
         newSection("Label:", () -> new Node[]{
                 new Label("Label"),
                 withState(new Label("Disabled"), "disabled")
@@ -935,7 +943,7 @@ public class SamplePage extends ListView<SamplePage.SectionItem> {
         if (!Boolean.getBoolean("jpro")) {
             newSection(
                     "MenuBar & ContextMenu:", () -> new Node[]{
-//                    createMenuBar(),
+                            createMenuBar(),
                             createContextMenu()
                     }
             );
@@ -1004,6 +1012,19 @@ public class SamplePage extends ListView<SamplePage.SectionItem> {
                         createScatterChart()
                 }
         );
+    }
+
+    private Node createAlertButton(String title, Alert.AlertType type) {
+        Button button = new Button(title);
+        button.setOnAction(evt -> {
+            Alert alert = new Alert(type, title);
+            if (type.equals(Alert.AlertType.NONE)) {
+                // we need a button to close the dialog
+                alert.getButtonTypes().add(ButtonType.OK);
+            }
+            alert.show();
+        });
+        return button;
     }
 
     private void newSection(String name, Supplier<Node[]> childrenSupplier) {
