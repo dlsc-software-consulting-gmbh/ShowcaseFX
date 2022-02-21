@@ -8,6 +8,7 @@ open module com.dlsc.showcasefx {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.materialdesign;
     requires fr.brouillard.oss.cssfx;
+    requires org.scenicview.scenicview;
 
     exports com.dlsc.showcase;
     exports com.dlsc.showcase.app;

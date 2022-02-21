@@ -51,6 +51,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign.MaterialDesign;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +79,11 @@ public class SamplePageHelpers {
     static <T extends Node> T withState(T node, String state, String subNodeStyleClass, String subNodeState) {
         withState(node, state);
         Platform.runLater(() -> withState(node.lookup(subNodeStyleClass), subNodeState));
+        return node;
+    }
+
+    static Labeled withIcon(Labeled node) {
+        node.setGraphic(new FontIcon(MaterialDesign.MDI_DOWNLOAD));
         return node;
     }
 

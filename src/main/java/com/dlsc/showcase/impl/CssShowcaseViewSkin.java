@@ -44,6 +44,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
 import javafx.util.StringConverter;
+import org.scenicview.ScenicView;
 
 import java.io.IOException;
 import java.util.Map;
@@ -98,11 +99,11 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
             return;
         }
 
-        contentGroup.getStylesheets().clear();
+        contentGroup.getScene().getStylesheets().clear();
 
         CssConfiguration config = view.getSelectedConfiguration();
         if (config != null) {
-            contentGroup.getStylesheets().addAll(config.getStylesheetUrls());
+            contentGroup.getScene().getStylesheets().addAll(config.getStylesheetUrls());
         }
     }
 
@@ -167,6 +168,9 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
                 setRetinaMode(btn.isSelected());
             });
 
+            Button scenicViewButton = new Button("Scenic View");
+            scenicViewButton.setOnAction(evt -> ScenicView.show(contentGroup));
+
             stylesheetsBox = new ComboBox<>();
             stylesheetsBox.setConverter(new StringConverter<>() {
                 @Override
@@ -193,7 +197,8 @@ public class CssShowcaseViewSkin extends SkinBase<CssShowcaseView> {
             ToolBar toolBar = new ToolBar(new Label("Stylesheet:"),
                     stylesheetsBox,
                     rtlButton,
-                    retinaButton
+                    retinaButton,
+                    scenicViewButton
             );
 
             toolBar.setId("TestAppToolbar");

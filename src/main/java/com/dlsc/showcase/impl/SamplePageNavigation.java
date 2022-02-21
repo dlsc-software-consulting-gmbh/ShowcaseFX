@@ -32,6 +32,7 @@
 package com.dlsc.showcase.impl;
 
 import javafx.collections.transformation.SortedList;
+import javafx.geometry.Insets;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
@@ -54,6 +55,7 @@ public class SamplePageNavigation extends BorderPane {
         ToolBar toolBar = new ToolBar();
         toolBar.setId("SamplePageToolBar");
         toolBar.getStyleClass().add("bottom");
+        toolBar.setPadding(new Insets(10));
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);

@@ -42,13 +42,28 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="-1.0" prefWidth="-1.0" xmlns:fx="http://javafx.com/fxml" fx:controller="com.dlsc.showcase.impl.SameHeightTestController">
   <children>
-    <VBox id="VBox" alignment="TOP_LEFT" layoutX="15.0" layoutY="19.0" spacing="5.0">
+    <VBox id="VBox" alignment="TOP_LEFT" layoutX="15.0" layoutY="19.0" spacing="15.0">
       <children>
-        <Label text="All of these controls should be the same height.">
+        <Label text="All of these controls should be the same height / width.">
           <font>
             <Font name="System Bold" size="13.0" fx:id="x2" />
           </font>
         </Label>
+        <HBox maxHeight="-Infinity" prefHeight="-1.0" prefWidth="-1.0" spacing="3.0" style="">
+          <CheckBox selected="false" text="Checkbox"/>
+          <CheckBox selected="true" text="Selected"/>
+          <CheckBox indeterminate="true" text="Indeterminate"/>
+        </HBox>
+        <HBox maxHeight="-Infinity" prefHeight="-1.0" prefWidth="-1.0" spacing="3.0" style="-fx-border-color: #f09f9b transparent #f09f9b transparent;" VBox.margin="$x1">
+          <CheckBox selected="false" text="Checkbox"/>
+          <CheckBox selected="true" text="Selected"/>
+          <CheckBox indeterminate="true" text="Indeterminate"/>
+        </HBox>
+        <VBox maxHeight="-Infinity" prefHeight="-1.0" prefWidth="-1.0" spacing="3.0" style="-fx-border-color: transparent #f09f9b transparent #f09f9b;" HBox.margin="$x1">
+          <CheckBox selected="false" text="Checkbox"/>
+          <CheckBox selected="true" text="Selected"/>
+          <CheckBox indeterminate="true" text="Indeterminate"/>
+        </VBox>
         <HBox maxHeight="-Infinity" prefHeight="-1.0" prefWidth="-1.0" spacing="3.0" style="">
           <children>
             <TitledPane animated="false" expanded="false" prefWidth="80.0" text="TitledPane">
@@ -314,7 +329,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </HBox>
       </children>
     </VBox>
-    <AnchorPane fx:id="arrowButtonContainer" layoutX="284.0" layoutY="337.0" prefHeight="250.0" prefWidth="322.0" style="-fx-border-color: #cccccc;">
+    <AnchorPane fx:id="arrowButtonContainer" layoutX="284.0" layoutY="500.0" prefHeight="250.0" prefWidth="322.0" style="-fx-border-color: #cccccc;">
       <children>
         <VBox alignment="TOP_RIGHT" minHeight="-1.0" prefHeight="-1.0" prefWidth="216.0" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
           <children>

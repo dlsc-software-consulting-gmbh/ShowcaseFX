@@ -43,6 +43,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.web.HTMLEditor;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign.MaterialDesign;
+import org.scenicview.ScenicView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,6 +82,11 @@ public class SamplePage extends ListView<SamplePage.SectionItem> {
                 withState(new Label("Disabled"), "disabled")
         });
 
+        newSection("Label (Icons):", () -> new Node[]{
+                withIcon(new Label("Label")),
+                withIcon(withState(new Label("Disabled"), "disabled"))
+        });
+
         newSection("Button:",
                 () -> new Node[]{
                         new Button("Button"),
@@ -88,6 +96,17 @@ public class SamplePage extends ListView<SamplePage.SectionItem> {
                         withState(new Button("Focused & Hover"), "focused, hover"),
                         withState(new Button("Focused & Armed"), "focused, armed"),
                         withState(new Button("Disabled"), "disabled")
+                });
+
+        newSection("Button (Icons):",
+                () -> new Node[]{
+                        withIcon(new Button("Button")),
+                        withIcon(withState(new Button("Hover"), "hover")),
+                        withIcon(withState(new Button("Armed"), "armed")),
+                        withIcon(withState(new Button("Focused"), "focused")),
+                        withIcon(withState(new Button("Focused & Hover"), "focused, hover")),
+                        withIcon(withState(new Button("Focused & Armed"), "focused, armed")),
+                        withIcon(withState(new Button("Disabled"), "disabled"))
                 });
 
         Button defaultButton = new Button("Button");
@@ -1018,6 +1037,7 @@ public class SamplePage extends ListView<SamplePage.SectionItem> {
         Button button = new Button(title);
         button.setOnAction(evt -> {
             Alert alert = new Alert(type, title);
+            alert.getDialogPane().getStylesheets().addAll(getScene().getStylesheets());
             if (type.equals(Alert.AlertType.NONE)) {
                 // we need a button to close the dialog
                 alert.getButtonTypes().add(ButtonType.OK);
@@ -1040,7 +1060,20 @@ public class SamplePage extends ListView<SamplePage.SectionItem> {
 
             HBox box = new HBox(spacing);
             box.getStyleClass().add("section-border");
-            box.getChildren().addAll(children);
+
+            Button scenicViewButton = new Button("");
+            scenicViewButton.setGraphic(new FontIcon(MaterialDesign.MDI_EYE));
+            box.getChildren().add(scenicViewButton);
+
+            Separator separator = new Separator(Orientation.VERTICAL);
+            box.getChildren().add(separator);
+
+            HBox innerBox = new HBox(spacing);
+            box.getChildren().add(innerBox);
+            scenicViewButton.setOnAction(evt -> ScenicView.show(innerBox));
+
+            innerBox.getChildren().addAll(children);
+
             return box;
         };
 
@@ -1103,7 +1136,9 @@ public class SamplePage extends ListView<SamplePage.SectionItem> {
             Label sectionLabel = new Label(labels[0]);
             sectionLabel.getStyleClass().add("section-label");
             sectionLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            HBox hbox = new HBox(10);
+
+
+            HBox innerBox = new HBox(10);
             for (int n = 0; n < children.length; n++) {
                 VBox vbox = new VBox(10);
                 vbox.getStyleClass().add("section-border");
@@ -1112,9 +1147,15 @@ public class SamplePage extends ListView<SamplePage.SectionItem> {
                 stateLabel.getStyleClass().add("section-label");
                 vbox.getChildren().add(stateLabel);
                 vbox.getChildren().add(children[n]);
-                hbox.getChildren().addAll(vbox);
+                innerBox.getChildren().addAll(vbox);
             }
-            return hbox;
+
+            Button scenicViewButton = new Button("");
+            scenicViewButton.setGraphic(new FontIcon(MaterialDesign.MDI_EYE));
+            scenicViewButton.setOnAction(evt -> ScenicView.show(innerBox));
+
+            HBox box = new HBox(scenicViewButton, new Separator(Orientation.VERTICAL), innerBox);
+            return box;
         };
 
         SectionItem item = new SectionItem();
